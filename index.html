@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Harish Nishad – Software Engineer Portfolio" />
+
+    <title>Harish Nishad | Software Engineer</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap"
+        rel="stylesheet" />
+
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+    <div id="scroll-progress" aria-hidden="true"></div>
+
+    <!-- ── HERO HEADER ─────────────────────────────────────── -->
+    <header id="body-header">
+        <nav aria-label="Primary navigation">
+            <a class="nav-brand" href="#body-header" aria-label="Home">HN</a>
+            <ul class="horizontal-list nav-menu">
+                <li><a href="#about">About</a></li>
+                <li><a href="#skills">Skills</a></li>
+                <li><a href="#experience">Experience</a></li>
+                <li><a href="#education">Education</a></li>
+                <li><a href="#portfolio">Projects</a></li>
+                <li><a href="#certifications">Certifications</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </nav>
+
+        <div id="name-social-container">
+            <div class="hero-shell">
+                <div class="hero-copy">
+                    <div class="hero-available-badge"><span class="pulse-dot"></span>&nbsp;Available for Opportunities</div>
+                    <h1 id="my-name">Loading…</h1>
+                    <p id="my-tagline"></p>
+                    <p id="hero-contact-line"></p>
+                    <div id="hero-quick-facts" class="hero-quick-facts"></div>
+
+                    <div class="hero-cta">
+                        <a href="#contact">Hire Me</a>
+                        <a href="#portfolio">View Work</a>
+                    </div>
+
+                    <ul id="hero-social-icons" class="horizontal-list social-icons" aria-label="Social links"></ul>
+                </div>
+
+                <aside class="hero-panel" aria-label="Professional summary highlights">
+                    <p class="hero-panel-label">Impact Snapshot</p>
+                    <h2 class="hero-panel-title">Building reliable products across backend, frontend, and cloud delivery.</h2>
+                    <div id="hero-focus-points" class="hero-focus-points"></div>
+                </aside>
+            </div>
+        </div>
+    </header>
+
+    <!-- ── ABOUT ───────────────────────────────────────────── -->
+    <section id="about" aria-labelledby="about-heading">
+        <div class="about-showcase">
+            <aside class="about-identity-card" aria-label="Profile introduction">
+                <div id="my-image">
+                    <img id="profile-image" src="" alt="Profile photo" />
+                </div>
+
+                <div class="about-identity-copy">
+                    <p class="about-kicker">Profile Snapshot</p>
+                    <h3 class="about-identity-title">Backend-first engineering with product thinking and delivery focus.</h3>
+                    <p class="about-identity-note">Building reliable full-stack systems that balance architecture, performance, and day-to-day usability.</p>
+                </div>
+            </aside>
+
+            <div class="about-content-card">
+                <div class="section-heading mb75px" id="about-heading">
+                    <span>About Me</span>
+                    <i class="fas fa-user" aria-hidden="true"></i>
+                </div>
+
+                <div id="about-para">
+                    <p id="about-summary"></p>
+                    <p class="about-location-row"><i class="fas fa-map-marker-alt" aria-hidden="true"></i>&nbsp;<span id="about-location"></span></p>
+                </div>
+
+                <div class="about-presence-row" aria-label="Professional focus areas">
+                    <span class="about-presence-pill">Full-Stack Delivery</span>
+                    <span class="about-presence-pill">Node.js Architecture</span>
+                    <span class="about-presence-pill">Cloud & DevOps</span>
+                </div>
+
+                <div id="about-stats" class="about-stats-row"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ── SKILLS ──────────────────────────────────────────── -->
+    <section id="skills" aria-labelledby="skills-heading">
+        <div class="section-heading mb75px" id="skills-heading">
+            <span>Skills &amp; Proficiency</span>
+            <i class="fas fa-code" aria-hidden="true"></i>
+        </div>
+        <p class="section-intro">A delivery-focused full-stack toolkit spanning product engineering, cloud deployment, data pipelines, and scalable backend systems.</p>
+
+        <div class="skills-showcase">
+            <aside class="skills-story-panel" aria-label="Skills overview">
+                <p class="skills-story-kicker">Capability Snapshot</p>
+                <h3 class="skills-story-title">The same engineering approach across backend systems, frontend delivery, and cloud execution.</h3>
+                <div class="skills-story-list">
+                    <div class="skills-story-item">
+                        <i class="fas fa-layer-group" aria-hidden="true"></i>
+                        <span>Modular full-stack delivery for enterprise and product workflows.</span>
+                    </div>
+                    <div class="skills-story-item">
+                        <i class="fas fa-gauge-high" aria-hidden="true"></i>
+                        <span>Performance-oriented implementation with automation, caching, and reporting pipelines.</span>
+                    </div>
+                    <div class="skills-story-item">
+                        <i class="fas fa-cloud-arrow-up" aria-hidden="true"></i>
+                        <span>Deployment-aware engineering across AWS, CI/CD, containers, and operational tooling.</span>
+                    </div>
+                </div>
+            </aside>
+
+            <div id="skills-display" class="skills-display"></div>
+        </div>
+
+        <div id="skill-category-grid" class="skill-category-grid"></div>
+    </section>
+
+    <!-- ── EXPERIENCE ──────────────────────────────────────── -->
+    <section id="experience" aria-labelledby="exp-heading">
+        <div class="section-heading mb75px" id="exp-heading">
+            <span>Work Experience</span>
+            <i class="fas fa-briefcase" aria-hidden="true"></i>
+        </div>
+        <p class="section-intro">A track record of shipping measurable improvements in operations, reporting, workflow automation, and platform performance.</p>
+
+        <div class="section-showcase timeline-showcase">
+            <aside class="section-story-panel" aria-label="Work experience overview">
+                <p class="section-story-kicker">Career Snapshot</p>
+                <h3 class="section-story-title">Hands-on delivery across enterprise systems, client-site execution, and product engineering teams.</h3>
+                <div class="section-story-list">
+                    <div class="section-story-item">
+                        <i class="fas fa-building" aria-hidden="true"></i>
+                        <span>Delivered solutions in enterprise, healthcare-tech, fintech, and internal operations environments.</span>
+                    </div>
+                    <div class="section-story-item">
+                        <i class="fas fa-chart-line" aria-hidden="true"></i>
+                        <span>Focused on measurable gains in reporting speed, automation quality, and API performance.</span>
+                    </div>
+                    <div class="section-story-item">
+                        <i class="fas fa-users-gear" aria-hidden="true"></i>
+                        <span>Worked directly with clients, cross-functional teams, and junior engineers to ship production outcomes.</span>
+                    </div>
+                </div>
+            </aside>
+
+            <div id="experience-timeline" class="timeline"></div>
+        </div>
+    </section>
+
+    <!-- ── EDUCATION ───────────────────────────────────────── -->
+    <section id="education" aria-labelledby="edu-heading">
+        <div class="section-heading mb75px" id="edu-heading">
+            <span>Education</span>
+            <i class="fas fa-graduation-cap" aria-hidden="true"></i>
+        </div>
+        <p class="section-intro">Formal grounding in software engineering fundamentals, algorithms, data structures, and modern computing systems.</p>
+
+        <div class="section-showcase timeline-showcase">
+            <aside class="section-story-panel section-story-panel-light" aria-label="Education overview">
+                <p class="section-story-kicker">Academic Foundation</p>
+                <h3 class="section-story-title">A technical base built on core computer science concepts and practical software development skills.</h3>
+                <div class="section-story-list">
+                    <div class="section-story-item">
+                        <i class="fas fa-brain" aria-hidden="true"></i>
+                        <span>Strong grounding in algorithms, object-oriented design, and structured problem solving.</span>
+                    </div>
+                    <div class="section-story-item">
+                        <i class="fas fa-database" aria-hidden="true"></i>
+                        <span>Coverage across databases, networks, discrete mathematics, and software systems thinking.</span>
+                    </div>
+                    <div class="section-story-item">
+                        <i class="fas fa-laptop-code" aria-hidden="true"></i>
+                        <span>Academic progression aligned with full-stack development and applied engineering practice.</span>
+                    </div>
+                </div>
+            </aside>
+
+            <div id="education-timeline" class="timeline"></div>
+        </div>
+    </section>
+
+    <!-- ── PROJECTS ────────────────────────────────────────── -->
+    <section id="portfolio" aria-labelledby="portfolio-heading">
+        <div class="section-heading mb75px" id="portfolio-heading">
+            <span>Projects</span>
+            <i class="fas fa-folder-open" aria-hidden="true"></i>
+        </div>
+        <p class="section-intro">Selected product and platform work across enterprise operations, financial workflows, survey systems, and supply-chain traceability.</p>
+
+        <div id="portfolio-container"></div>
+    </section>
+
+    <!-- ── CERTIFICATIONS ──────────────────────────────────── -->
+    <section id="certifications" aria-labelledby="cert-heading">
+        <div class="section-heading mb75px" id="cert-heading">
+            <span>Certifications</span>
+            <i class="fas fa-certificate" aria-hidden="true"></i>
+        </div>
+        <p class="section-intro">Continued learning across system design, backend engineering, operating systems, databases, and frontend development.</p>
+
+        <div id="certification-grid" class="certification-grid"></div>
+    </section>
+
+    <!-- ── CONTACT ─────────────────────────────────────────── -->
+    <section id="contact" aria-labelledby="contact-heading">
+        <div class="section-heading mb75px" id="contact-heading">
+            <span>Get in Touch</span>
+            <i class="fas fa-envelope" aria-hidden="true"></i>
+        </div>
+        <p class="section-intro section-intro-light">Available for full-time software engineering roles, client-facing delivery work, and product-focused full-stack development.</p>
+
+        <div id="contact-container">
+            <!-- Left: Contact form -->
+            <div id="contact-form-container">
+                <form id="contact-form" novalidate>
+                    <input type="text" name="name" placeholder="Your Name" required autocomplete="name" />
+                    <input type="email" name="email" placeholder="Your Email" required autocomplete="email" />
+                    <input type="text" name="subject" placeholder="Subject" />
+                    <textarea name="message" rows="5" placeholder="Your Message" required></textarea>
+                    <button type="submit">Send Message</button>
+                </form>
+            </div>
+
+            <!-- Right: My details -->
+            <div id="my-details-container">
+                <h3>Let's Connect</h3>
+                <p id="contact-summary"></p>
+
+                <div class="my-details-info-container">
+                    <i class="fas fa-map-marker-alt" aria-hidden="true"></i>
+                    <span id="contact-location"></span>
+                </div>
+                <div class="my-details-info-container">
+                    <i class="fas fa-phone" aria-hidden="true"></i>
+                    <span id="contact-phone"></span>
+                </div>
+                <div class="my-details-info-container">
+                    <i class="fas fa-envelope" aria-hidden="true"></i>
+                    <span id="contact-email"></span>
+                </div>
+
+                <ul id="footer-social-icons" class="horizontal-list social-icons" aria-label="Social links footer"></ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- ── FOOTER ──────────────────────────────────────────── -->
+    <footer style="text-align:center; padding: 1.4rem; font-size: 0.85rem; color: #777;">
+        &copy; <span id="footer-year"></span> Harish Nishad. All rights reserved.
+    </footer>
+
+    <div id="timeline-detail-modal" class="timeline-detail-modal" aria-hidden="true">
+        <div id="timeline-detail-backdrop" class="timeline-detail-backdrop"></div>
+        <div class="timeline-detail-dialog" role="dialog" aria-modal="true" aria-labelledby="timeline-detail-title">
+            <button id="timeline-detail-close" class="timeline-detail-close" type="button" aria-label="Close details">
+                <i class="fas fa-xmark" aria-hidden="true"></i>
+            </button>
+            <p id="timeline-detail-kicker" class="timeline-detail-kicker"></p>
+            <h3 id="timeline-detail-title" class="timeline-detail-title"></h3>
+            <p id="timeline-detail-subtitle" class="timeline-detail-subtitle"></p>
+            <p id="timeline-detail-period" class="timeline-detail-period"></p>
+            <ul id="timeline-detail-list" class="timeline-detail-list"></ul>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('footer-year').textContent = new Date().getFullYear();
+    </script>
+    <button id="back-to-top" aria-label="Back to top" title="Back to top">
+        <i class="fas fa-chevron-up" aria-hidden="true"></i>
+    </button>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
