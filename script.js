@@ -21,7 +21,7 @@ var RESUME_DATA = {
                   'specialising in Angular, React, Node.js, and cloud architecture. ' +
                   'Proven track record of delivering scalable, high-performance applications ' +
                   'in fast-paced environments. Passionate about leveraging technical expertise ' +
-                  'to drive innovation and develop solutions that benefit society and humanity.',
+                  'to drive innovation and develop solutions that benefit society and humanitY.',
         image:    'https://resume0775.s3.eu-north-1.amazonaws.com/withCard.jpg',
         quickFacts: [
             { value: '4+', label: 'Years Experience' },
