@@ -581,18 +581,48 @@ var RESUME_DATA = {
     ],
 
     certifications: [
-        { name: 'Operating Systems',                       issuer: 'Coding Ninjas', date: 'Mar 2024' },
-        { name: 'Database Management System',              issuer: 'Coding Ninjas', date: 'May 2024' },
-        { name: 'System Design',                           issuer: 'Coding Ninjas', date: 'Jun 2024' },
+        {
+            name: 'Operating Systems',
+            issuer: 'Coding Ninjas',
+            date: 'Mar 2024',
+            fileUrl: 'https://resume0775.s3.eu-north-1.amazonaws.com/operating_systems.pdf'
+        },
+        {
+            name: 'Database Management System',
+            issuer: 'Coding Ninjas',
+            date: 'May 2024',
+            fileUrl: 'https://resume0775.s3.eu-north-1.amazonaws.com/database-management-system_dbms.pdf',
+            description: 'Has successfully completed the course "Database Management System (DBMS)" conducted from February \u201924 to May \u201924.'
+        },
+        {
+            name: 'System Design',
+            issuer: 'Coding Ninjas',
+            date: 'Jun 2024',
+            fileUrl: 'https://resume0775.s3.eu-north-1.amazonaws.com/system_design.pdf',
+            description: 'Has successfully completed the course "System Design" conducted from April \u201924 to June \u201924.'
+        },
         { name: 'Back End – Triplebyte Certified',         issuer: 'Triplebyte',    date: 'Apr 2022' },
-        { name: 'Front End Development with React',        issuer: 'Coding Ninjas', date: 'May 2021' },
+        {
+            name: 'Front End Development with React',
+            issuer: 'Coding Ninjas',
+            date: 'May 2021',
+                fileUrl: 'https://resume0775.s3.eu-north-1.amazonaws.com/advanced-front-end-web-development-with-react_full-stack.pdf',
+                description: 'Has successfully completed the course "Advance Front-End Web Development with React - Full Stack" conducted from January 2021 to April 2021.'
+        },
         {
             name: 'Full Stack Web Dev – Node.js (Back End)',
             issuer: 'Coding Ninjas',
             date: 'Oct 2020',
-            fileUrl: 'file:///C:/Users/ITPL0043/Documents/back-end_full-stack-web-development_node-js.pdf'
+                fileUrl: 'https://resume0775.s3.eu-north-1.amazonaws.com/back-end_full-stack-web-development_node-js.pdf',
+                description: 'Has successfully completed the course "Back End | Full Stack Web Development in Node.js" conducted from July 2020 to October 2020.'
         },
-        { name: 'Full Stack Web Dev – Front End',          issuer: 'Coding Ninjas', date: 'Aug 2020' },
+        {
+            name: 'Full Stack Web Dev – Front End',
+            issuer: 'Coding Ninjas',
+            date: 'Aug 2020',
+                fileUrl: 'https://resume0775.s3.eu-north-1.amazonaws.com/front-end_full-stack-web-development.pdf',
+                description: 'Has successfully completed the course "Front End | Full Stack Web Development" conducted from May 2020 to July 2020.'
+        },
         { name: 'Java – Data Structures & Algorithms',     issuer: 'Coding Ninjas', date: 'Feb 2019' }
     ],
 
@@ -1200,6 +1230,7 @@ function buildCertifications(items) {
 function buildCertificatePreviewContent(cert) {
     var hasPreview = Boolean(cert && cert.fileUrl);
     var safeUrl = hasPreview ? escapeHtml(cert.fileUrl) : '';
+    var description = cert && cert.description ? '<p class="certificate-modal-summary">' + escapeHtml(cert.description) + '</p>' : '';
 
     return (
         '<div class="certificate-modal-shell">' +
@@ -1207,6 +1238,7 @@ function buildCertificatePreviewContent(cert) {
         '<p class="certificate-modal-kicker">Certificate Preview</p>' +
         '<h3 id="certificate-preview-title" class="certificate-modal-title">' + escapeHtml(cert.name || '') + '</h3>' +
         '<p class="certificate-modal-meta">' + escapeHtml(cert.issuer || '') + ' | ' + escapeHtml(cert.date || '') + '</p>' +
+        description +
         '</div>' +
         '<div class="certificate-modal-stage">' +
         (hasPreview
