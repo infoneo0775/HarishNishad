@@ -586,7 +586,12 @@ var RESUME_DATA = {
         { name: 'System Design',                           issuer: 'Coding Ninjas', date: 'Jun 2024' },
         { name: 'Back End – Triplebyte Certified',         issuer: 'Triplebyte',    date: 'Apr 2022' },
         { name: 'Front End Development with React',        issuer: 'Coding Ninjas', date: 'May 2021' },
-        { name: 'Full Stack Web Dev – Node.js (Back End)', issuer: 'Coding Ninjas', date: 'Oct 2020' },
+        {
+            name: 'Full Stack Web Dev – Node.js (Back End)',
+            issuer: 'Coding Ninjas',
+            date: 'Oct 2020',
+            fileUrl: 'file:///C:/Users/ITPL0043/Documents/back-end_full-stack-web-development_node-js.pdf'
+        },
         { name: 'Full Stack Web Dev – Front End',          issuer: 'Coding Ninjas', date: 'Aug 2020' },
         { name: 'Java – Data Structures & Algorithms',     issuer: 'Coding Ninjas', date: 'Feb 2019' }
     ]
@@ -597,6 +602,8 @@ var progressBars = [];
 var timelineDetailsStore = {};
 var projectDetailsStore = {};
 var projectDetailLastTrigger = null;
+var certificatePreviewStore = {};
+var certificatePreviewLastTrigger = null;
 
 // ── Utilities ────────────────────────────────────────────────
 
@@ -1081,16 +1088,45 @@ function buildProjectDetailContent(project) {
 
 /**
  * Builds a single certification card.
- * @param {{ name: string, issuer: string, date: string }} cert
+ * @param {{ name: string, issuer: string, date: string, fileUrl?: string }} cert
+ * @param {string} certId
+ * @param {number} index
  * @returns {string}
  */
-function buildCertCard(cert) {
+function buildCertCard(cert, certId, index) {
+    var hasPreview = Boolean(cert.fileUrl);
     return (
-        '<article class="cert-card">' +
-        '<h3>'   + escapeHtml(cert.name)   + '</h3>' +
-        '<p>'    + escapeHtml(cert.issuer) + '</p>'  +
-        '<span>' + escapeHtml(cert.date)   + '</span>' +
-        '</article>'
+        '<button type="button" class="cert-card cert-card-trigger" data-cert-id="' + escapeHtml(certId) + '" aria-label="Open certificate for ' + escapeHtml(cert.name) + '">' +
+        '<span class="cert-card-index">' + String(index + 1).padStart(2, '0') + '</span>' +
+        '<span class="cert-card-status' + (hasPreview ? ' is-live' : '') + '">' + (hasPreview ? 'Preview Ready' : 'Credential Record') + '</span>' +
+        '<h3 class="cert-card-title">' + escapeHtml(cert.name) + '</h3>' +
+        '<p class="cert-card-issuer">' + escapeHtml(cert.issuer) + '</p>' +
+        '<div class="cert-card-footer">' +
+        '<span class="cert-card-date">' + escapeHtml(cert.date) + '</span>' +
+        '<span class="cert-card-action">' + (hasPreview ? 'Open Certificate' : 'View Details') + '</span>' +
+        '</div>' +
+        '</button>'
+    );
+}
+
+function buildFeaturedCertification(cert, certId) {
+    var hasPreview = Boolean(cert && cert.fileUrl);
+    if (!cert) return '';
+
+    return (
+        '<button type="button" class="cert-feature-card cert-card-trigger" data-cert-id="' + escapeHtml(certId) + '" aria-label="Open featured certificate ' + escapeHtml(cert.name) + '">' +
+        '<span class="cert-feature-eyebrow">Featured Credential</span>' +
+        '<h3 class="cert-feature-title">' + escapeHtml(cert.name) + '</h3>' +
+        '<p class="cert-feature-copy">A focused backend credential that reinforces production-ready Node.js fundamentals, server-side architecture, and delivery discipline.</p>' +
+        '<div class="cert-feature-meta">' +
+        '<span><i class="fas fa-building-columns" aria-hidden="true"></i>' + escapeHtml(cert.issuer) + '</span>' +
+        '<span><i class="fas fa-calendar-days" aria-hidden="true"></i>' + escapeHtml(cert.date) + '</span>' +
+        '</div>' +
+        '<div class="cert-feature-actions">' +
+        '<span class="cert-feature-button">' + (hasPreview ? 'Preview PDF Certificate' : 'Open Credential Details') + '</span>' +
+        '<span class="cert-feature-note">' + (hasPreview ? 'Local certificate file attached' : 'Credential metadata only') + '</span>' +
+        '</div>' +
+        '</button>'
     );
 }
 
@@ -1100,7 +1136,53 @@ function buildCertCard(cert) {
  * @returns {string}
  */
 function buildCertifications(items) {
-    return safeArray(items).map(buildCertCard).join('');
+    var certs = safeArray(items);
+    var featuredIndex = certs.findIndex(function (cert) {
+        return Boolean(cert && cert.fileUrl);
+    });
+
+    if (featuredIndex === -1) featuredIndex = 0;
+
+    certificatePreviewStore = {};
+
+    certs.forEach(function (cert, index) {
+        certificatePreviewStore['cert-' + index] = cert;
+    });
+
+    return (
+        '<div class="certification-showcase">' +
+        buildFeaturedCertification(certs[featuredIndex], 'cert-' + featuredIndex) +
+        '<div class="certification-gallery">' + certs.map(function (cert, index) {
+            return buildCertCard(cert, 'cert-' + index, index);
+        }).join('') + '</div>' +
+        '</div>'
+    );
+}
+
+function buildCertificatePreviewContent(cert) {
+    var hasPreview = Boolean(cert && cert.fileUrl);
+    var safeUrl = hasPreview ? escapeHtml(cert.fileUrl) : '';
+
+    return (
+        '<div class="certificate-modal-shell">' +
+        '<div class="certificate-modal-header">' +
+        '<p class="certificate-modal-kicker">Certificate Preview</p>' +
+        '<h3 id="certificate-preview-title" class="certificate-modal-title">' + escapeHtml(cert.name || '') + '</h3>' +
+        '<p class="certificate-modal-meta">' + escapeHtml(cert.issuer || '') + ' | ' + escapeHtml(cert.date || '') + '</p>' +
+        '</div>' +
+        '<div class="certificate-modal-stage">' +
+        (hasPreview
+            ? '<iframe class="certificate-modal-frame" src="' + safeUrl + '" title="Certificate preview for ' + escapeHtml(cert.name || '') + '"></iframe>'
+            : '<div class="certificate-modal-empty"><i class="fas fa-file-circle-question" aria-hidden="true"></i><p>Preview file is not attached for this certificate yet.</p></div>') +
+        '</div>' +
+        '<div class="certificate-modal-footer">' +
+        (hasPreview
+            ? '<a class="certificate-modal-link" href="' + safeUrl + '" target="_blank" rel="noreferrer noopener">Open certificate directly</a>' +
+              '<p class="certificate-modal-note">If the embedded preview is blocked by the browser, open the PDF directly from the link above.</p>'
+            : '<p class="certificate-modal-note">Add a local or hosted PDF path to this certification entry to enable embedded preview.</p>') +
+        '</div>' +
+        '</div>'
+    );
 }
 
 /**
@@ -1254,6 +1336,7 @@ function initialisePage() {
     setupTimelineAnimations();
     setupTimelineDetailDialog();
     setupProjectDetailDialog();
+    setupCertificatePreviewDialog();
     setupContactForm();
 
     // Apply initial scroll state
@@ -1510,6 +1593,103 @@ function setupProjectDetailDialog() {
 
         if (event.key === 'Escape') {
             closeProjectDetail();
+        }
+    });
+}
+
+function ensureCertificatePreviewModal() {
+    var modal = document.getElementById('certificate-preview-modal');
+    if (modal) return modal;
+
+    modal = document.createElement('div');
+    modal.id = 'certificate-preview-modal';
+    modal.className = 'certificate-preview-modal';
+    modal.setAttribute('aria-hidden', 'true');
+    modal.innerHTML = '' +
+        '<div class="certificate-preview-backdrop" data-certificate-preview-close="true"></div>' +
+        '<div class="certificate-preview-dialog" role="dialog" aria-modal="true" aria-labelledby="certificate-preview-title">' +
+        '<button type="button" class="certificate-preview-close" aria-label="Close certificate preview" data-certificate-preview-close="true">' +
+        '<i class="fas fa-xmark" aria-hidden="true"></i>' +
+        '</button>' +
+        '<div id="certificate-preview-content"></div>' +
+        '</div>';
+
+    document.body.appendChild(modal);
+    return modal;
+}
+
+function openCertificatePreview(certId, trigger) {
+    var modal = ensureCertificatePreviewModal();
+    var content = document.getElementById('certificate-preview-content');
+    var dialog = modal ? modal.querySelector('.certificate-preview-dialog') : null;
+    var cert = certificatePreviewStore[certId];
+
+    if (!modal || !content || !cert) return;
+
+    certificatePreviewLastTrigger = trigger || null;
+    content.innerHTML = buildCertificatePreviewContent(cert);
+    modal.classList.add('is-open');
+    modal.setAttribute('aria-hidden', 'false');
+    document.body.classList.add('has-modal-open');
+    if (dialog) dialog.scrollTop = 0;
+
+    var closeButton = modal.querySelector('.certificate-preview-close');
+    if (closeButton) closeButton.focus();
+}
+
+function closeCertificatePreview() {
+    var modal = document.getElementById('certificate-preview-modal');
+    if (!modal) return;
+
+    modal.classList.remove('is-open');
+    modal.setAttribute('aria-hidden', 'true');
+    document.body.classList.remove('has-modal-open');
+
+    if (certificatePreviewLastTrigger) {
+        certificatePreviewLastTrigger.focus();
+        certificatePreviewLastTrigger = null;
+    }
+}
+
+function trapCertificatePreviewFocus(event) {
+    var modal = document.getElementById('certificate-preview-modal');
+    if (!modal || !modal.classList.contains('is-open') || event.key !== 'Tab') return;
+
+    var focusable = modal.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+    if (!focusable.length) return;
+
+    var first = focusable[0];
+    var last = focusable[focusable.length - 1];
+
+    if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+    } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+    }
+}
+
+function setupCertificatePreviewDialog() {
+    ensureCertificatePreviewModal();
+
+    document.addEventListener('click', function (event) {
+        var trigger = event.target.closest('.cert-card-trigger');
+        if (trigger) {
+            openCertificatePreview(trigger.getAttribute('data-cert-id'), trigger);
+            return;
+        }
+
+        if (event.target.closest('[data-certificate-preview-close="true"]')) {
+            closeCertificatePreview();
+        }
+    });
+
+    document.addEventListener('keydown', function (event) {
+        trapCertificatePreviewFocus(event);
+
+        if (event.key === 'Escape') {
+            closeCertificatePreview();
         }
     });
 }
