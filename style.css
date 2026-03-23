@@ -439,6 +439,10 @@ section {
     color: var(--blinkit-green);
 }
 
+#about .section-heading span {
+    color: var(--ink-900);
+}
+
 .section-intro {
     width: min(760px, 100%);
     margin: -0.8rem auto 1.3rem;
