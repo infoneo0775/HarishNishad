@@ -824,13 +824,25 @@ function buildSkillCategoryGrid(skillsByCategory) {
         'Databases': 'fas fa-database',
         'Tools & Practices': 'fas fa-tools'
     };
+    var descriptions = {
+        'Languages': 'Core implementation languages used across frontend, backend, and data workflows.',
+        'Frameworks': 'Production-focused frameworks and libraries used for scalable application delivery.',
+        'Cloud & DevOps': 'Deployment, infrastructure, and operations tooling for modern engineering execution.',
+        'Databases': 'Transactional and cache-layer systems used for structured and high-performance data access.',
+        'Tools & Practices': 'Daily delivery disciplines, architectural patterns, and workflow automation practices.'
+    };
     return Object.keys(safeObject(skillsByCategory))
         .map(function (category) {
             var iconClass = icons[category] || 'fas fa-check-circle';
             var items = safeArray(skillsByCategory[category]);
-            var chips = safeArray(skillsByCategory[category])
-                .map(function (skill) {
-                    return '<span class="skill-chip">' + escapeHtml(skill) + '</span>';
+            var rows = items
+                .map(function (skill, index) {
+                    return (
+                        '<div class="skill-category-item">' +
+                        '<span class="skill-category-item-index">' + String(index + 1).padStart(2, '0') + '</span>' +
+                        '<span class="skill-category-item-name">' + escapeHtml(skill) + '</span>' +
+                        '</div>'
+                    );
                 })
                 .join('');
             return (
@@ -839,7 +851,8 @@ function buildSkillCategoryGrid(skillsByCategory) {
                 '<h3 class="skill-category-title"><i class="' + iconClass + '" aria-hidden="true"></i> ' + escapeHtml(category) + '</h3>' +
                 '<span class="skill-category-count">' + items.length + ' items</span>' +
                 '</div>' +
-                '<div class="chip-list">' + chips + '</div>' +
+                '<p class="skill-category-copy">' + escapeHtml(descriptions[category] || 'Delivery-focused capability stack.') + '</p>' +
+                '<div class="skill-category-stack">' + rows + '</div>' +
                 '</article>'
             );
         })
