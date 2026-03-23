@@ -7,6 +7,13 @@
 'use strict';
 
 var CONTACT_FORM_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbylRgi6mRepZz0lMO4LfXT7H2eGXwPyEOujCJN4PNP_id1vDPDW48wy0XIY3BdjbbEr/exec';
+var COMPANY_LOGOS = {
+    doceree: 'https://resume0775.s3.eu-north-1.amazonaws.com/doceree_logo.svg',
+    codefire: 'https://resume0775.s3.eu-north-1.amazonaws.com/codefire.webp',
+    infoneo: 'https://resume0775.s3.eu-north-1.amazonaws.com/infoneo.png',
+    primafelicitas: 'https://resume0775.s3.eu-north-1.amazonaws.com/primafelicitas.png',
+    ignou: 'https://resume0775.s3.eu-north-1.amazonaws.com/ignou.webp'
+};
 
 // ── Static Resume Data ───────────────────────────────────────
 var RESUME_DATA = {
@@ -786,6 +793,45 @@ function buildHeroFocusPoints(items) {
         .join('');
 }
 
+function getCompanyLogoUrl(companyName) {
+    var normalizedName = String(companyName || '').toLowerCase();
+
+    if (normalizedName.indexOf('doceree') !== -1) return COMPANY_LOGOS.doceree;
+    if (normalizedName.indexOf('codefire') !== -1) return COMPANY_LOGOS.codefire;
+    if (normalizedName.indexOf('infoneo') !== -1) return COMPANY_LOGOS.infoneo;
+    if (normalizedName.indexOf('primafelicitas') !== -1) return COMPANY_LOGOS.primafelicitas;
+    if (normalizedName.indexOf('ignou') !== -1) return COMPANY_LOGOS.ignou;
+
+    return '';
+}
+
+function buildCompanyIdentity(companyName, wrapperClass, logoClass, nameClass) {
+    var companyText = String(companyName || '');
+    var safeCompanyName = escapeHtml(companyText);
+    var logoUrl = getCompanyLogoUrl(companyText);
+    var classes = 'company-identity' + (wrapperClass ? ' ' + wrapperClass : '');
+    var nameClasses = 'company-identity-name' + (nameClass ? ' ' + nameClass : '');
+
+    if (!safeCompanyName) return '';
+
+    if (!logoUrl) {
+        return (
+            '<span class="' + classes + '">' +
+            '<span class="' + nameClasses + '">' + safeCompanyName + '</span>' +
+            '</span>'
+        );
+    }
+
+    return (
+        '<span class="' + classes + '">' +
+        '<span class="company-logo-frame">' +
+        '<img class="company-logo' + (logoClass ? ' ' + logoClass : '') + '" src="' + escapeHtml(logoUrl) + '" alt="' + safeCompanyName + ' logo">' +
+        '</span>' +
+        '<span class="' + nameClasses + '">' + safeCompanyName + '</span>' +
+        '</span>'
+    );
+}
+
 /**
  * Returns display metadata for a skill level.
  * @param {number} level
@@ -921,7 +967,12 @@ function buildTimelineCard(item, index, detailId, detailGroup) {
     var bullets = buildTimelinePreview(bulletItems, 2);
 
     var title    = escapeHtml(item.role    || item.degree    || '');
-    var subtitle = escapeHtml(item.company || item.institute || '');
+    var subtitle = buildCompanyIdentity(
+        item.company || item.institute || '',
+        'company-identity-timeline',
+        'company-logo-timeline',
+        'company-identity-name-timeline'
+    );
     var period   = escapeHtml(item.period  || '');
     var context  = item.context ? ' | ' + escapeHtml(item.context) : '';
     var side     = index % 2 === 1 ? 'right' : 'left';
@@ -1149,7 +1200,10 @@ function buildProjectDetailContent(project) {
         '<div class="project-detail-header-copy">' +
         '<p class="project-detail-kicker">' + escapeHtml(project.domain || 'Project Case Study') + '</p>' +
         '<h3 id="project-detail-title" class="project-detail-title">' + escapeHtml(project.title || '') + '</h3>' +
-        '<p class="project-detail-subtitle">' + escapeHtml(project.company || '') + (project.period ? ' | ' + escapeHtml(project.period) : '') + '</p>' +
+        '<div class="project-detail-subtitle">' +
+        buildCompanyIdentity(project.company || '', 'company-identity-detail-modal', 'company-logo-detail-modal', 'company-identity-name-detail-modal') +
+        (project.period ? '<span class="project-detail-period-chip">' + escapeHtml(project.period) + '</span>' : '') +
+        '</div>' +
         '<p class="project-detail-summary">' + escapeHtml(project.summary || '') + '</p>' +
         '</div>' +
         '</div>' +
@@ -1688,7 +1742,10 @@ function openTimelineDetail(detailId) {
 
     setText('timeline-detail-kicker', data.kicker || 'Details');
     setText('timeline-detail-title', data.title || '');
-    setText('timeline-detail-subtitle', data.subtitle || '');
+    setHtml(
+        'timeline-detail-subtitle',
+        buildCompanyIdentity(data.subtitle || '', 'company-identity-detail-modal', 'company-logo-detail-modal', 'company-identity-name-detail-modal')
+    );
     setText('timeline-detail-period', data.period + (data.context ? ' | ' + data.context : ''));
     setHtml('timeline-detail-list', safeArray(data.details).map(function (item) {
         return '<li>' + escapeHtml(item) + '</li>';

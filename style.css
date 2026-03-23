@@ -1224,6 +1224,10 @@ section {
     font-size: 0.98rem;
 }
 
+.experience-company-name .company-identity {
+    align-items: center;
+}
+
 .experience-duration {
     margin-top: 0.4rem;
     color: #838383;
@@ -1353,6 +1357,78 @@ section {
     z-index: 1;
 }
 
+.company-identity {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.65rem;
+    min-width: 0;
+    max-width: 100%;
+}
+.company-logo-frame {
+    width: 2.5rem;
+    height: 2.5rem;
+    flex: 0 0 auto;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.34rem;
+    border-radius: 14px;
+    background: #ffffff;
+    border: 1px solid rgba(12, 131, 31, 0.12);
+    box-shadow: 0 10px 22px rgba(17, 17, 17, 0.08);
+    overflow: hidden;
+}
+
+.company-logo {
+    display: block;
+    width: 100%;
+    height: 100%;
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    object-position: center;
+    transform-origin: center;
+}
+.company-identity-name {
+    min-width: 0;
+    color: inherit;
+    line-height: 1.4;
+}
+.company-identity-timeline,
+.company-identity-detail,
+.company-identity-detail-modal,
+.company-identity-project {
+    width: 100%;
+}
+.company-logo-timeline,
+.company-logo-detail,
+.company-logo-detail-modal,
+.company-logo-project {
+    object-fit: contain;
+}
+.company-identity-project {
+    gap: 0.52rem;
+    align-items: flex-start;
+}
+.company-identity-project .company-logo-frame {
+    width: 2.1rem;
+    height: 2.1rem;
+    padding: 0.28rem;
+    border-radius: 12px;
+}
+.company-identity-detail .company-logo-frame,
+.company-identity-detail-modal .company-logo-frame {
+    width: 2.35rem;
+    height: 2.35rem;
+}
+.company-identity-name-project {
+    display: inline-block;
+}
+.company-identity-name-detail,
+.company-identity-name-detail-modal,
+.company-identity-name-timeline {
+    color: inherit;
+}
 .project-overview-stat {
     padding: 0.8rem 0.72rem;
     border-radius: 18px;
@@ -1376,6 +1452,10 @@ section {
 }
 
 .project-overview-tags {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.7rem;
     display: flex;
     flex-wrap: wrap;
     gap: 0.55rem;
@@ -1473,6 +1553,10 @@ section {
     color: rgba(255, 255, 255, 0.66);
     font-size: 0.7rem;
     line-height: 1.35;
+}
+
+.project-case-company .company-identity-name {
+    color: inherit;
 }
 
 .project-case-arrow {
@@ -1682,9 +1766,25 @@ section {
 
 .project-detail-subtitle {
     margin: 0.55rem 0 0;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.7rem;
     color: rgba(255, 255, 255, 0.66);
     font-size: 0.92rem;
     line-height: 1.5;
+}
+
+.project-detail-period-chip {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.32rem 0.64rem;
+    border-radius: 999px;
+    background: rgba(247, 210, 67, 0.14);
+    border: 1px solid rgba(247, 210, 67, 0.18);
+    color: #fff1be;
+    font-size: 0.76rem;
+    font-weight: 700;
 }
 
 .project-detail-summary {
@@ -1733,6 +1833,10 @@ section {
     line-height: 1.45;
     font-weight: 700;
     word-break: break-word;
+}
+
+.project-detail-meta-value .company-identity {
+    align-items: center;
 }
 
 .project-detail-info-grid {
