@@ -623,7 +623,13 @@ var RESUME_DATA = {
                 fileUrl: 'https://resume0775.s3.eu-north-1.amazonaws.com/front-end_full-stack-web-development.pdf',
                 description: 'Has successfully completed the course "Front End | Full Stack Web Development" conducted from May 2020 to July 2020.'
         },
-        { name: 'Java – Data Structures & Algorithms',     issuer: 'Coding Ninjas', date: 'Feb 2019' }
+        {
+          name: 'Java – Data Structures & Algorithms',
+          issuer: 'Coding Ninjas', 
+          date: 'Feb 2019',
+          fileUrl: 'https://resume0775.s3.eu-north-1.amazonaws.com/Java.jpg',
+          description: 'Has successfully completed the course "Java - Data Structures and Algorithm" conducted from November 2018 to February 2019.'
+        }
     ],
 
     appreciations: [
@@ -642,7 +648,7 @@ var RESUME_DATA = {
             attachments: [
                 {
                     label: 'Appreciation Image 1',
-                    url: 'file:///C:/Users/ITPL0043/Pictures/apprecation1.PNG',
+                    url: 'https://resume0775.s3.eu-north-1.amazonaws.com/apprecation1.PNG',
                     type: 'image'
                 }
             ]
