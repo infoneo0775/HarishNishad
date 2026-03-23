@@ -432,6 +432,7 @@ section {
     color: var(--ink-900);
     margin-right: 0.35rem;
     vertical-align: middle;
+    color: whitesmoke;
 }
 
 .section-heading i {
@@ -1286,6 +1287,7 @@ section {
 #portfolio .section-heading span,
 #portfolio .section-heading i {
     color: #fff;
+    
 }
 
 #portfolio .section-intro {
@@ -3724,7 +3726,9 @@ section { scroll-margin-top: 80px; }
     background: linear-gradient(90deg, var(--blinkit-green), var(--blinkit-yellow));
     border-radius: 999px;
     margin: 0.6rem auto 0;
+    color: white;
 }
+
 
 /* About section stats row */
 .about-stats-row {
