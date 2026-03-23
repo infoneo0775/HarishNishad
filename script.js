@@ -594,6 +594,29 @@ var RESUME_DATA = {
         },
         { name: 'Full Stack Web Dev – Front End',          issuer: 'Coding Ninjas', date: 'Aug 2020' },
         { name: 'Java – Data Structures & Algorithms',     issuer: 'Coding Ninjas', date: 'Feb 2019' }
+    ],
+
+    appreciations: [
+        {
+            title: 'Client-Site Delivery Appreciation',
+            organization: 'GAIL Corporate Office / BIS Stakeholders',
+            date: '2025',
+            summary: 'Recognized for dependable on-site software delivery, strong ownership of operational workflows, and consistently high execution quality during enterprise implementation.',
+            quote: 'Appreciation received for delivering high-quality solutions with clarity, responsiveness, and professionalism during critical operations work.',
+            highlights: [
+                'Delivered business-critical features directly in the client environment.',
+                'Maintained strong coordination with operational stakeholders and officers.',
+                'Improved trust through reliable execution and fast issue turnaround.'
+            ],
+            attachmentLabel: 'Open appreciation attachments',
+            attachments: [
+                {
+                    label: 'Appreciation Image 1',
+                    url: 'file:///C:/Users/ITPL0043/Pictures/apprecation1.PNG',
+                    type: 'image'
+                }
+            ]
+        }
     ]
 };
 
@@ -604,6 +627,8 @@ var projectDetailsStore = {};
 var projectDetailLastTrigger = null;
 var certificatePreviewStore = {};
 var certificatePreviewLastTrigger = null;
+var appreciationPreviewStore = {};
+var appreciationPreviewLastTrigger = null;
 
 // ── Utilities ────────────────────────────────────────────────
 
@@ -1185,6 +1210,165 @@ function buildCertificatePreviewContent(cert) {
     );
 }
 
+function getAppreciationAttachments(item) {
+    var attachments = safeArray(item && item.attachments).filter(function (entry) {
+        return entry && entry.url;
+    });
+
+    if (!attachments.length && item && item.fileUrl) {
+        attachments.push({
+            label: item.attachmentLabel || 'Appreciation attachment',
+            url: item.fileUrl,
+            type: 'document'
+        });
+    }
+
+    return attachments;
+}
+
+function getAttachmentType(attachment) {
+    var explicitType = attachment && attachment.type;
+    var url = String(attachment && attachment.url ? attachment.url : '').toLowerCase();
+
+    if (explicitType) return explicitType;
+    if (/\.(png|jpe?g|gif|webp|bmp|svg)$/i.test(url)) return 'image';
+    if (/\.pdf$/i.test(url)) return 'pdf';
+    return 'document';
+}
+
+function buildAppreciationAttachmentPreview(attachment) {
+    var safeUrl = escapeHtml(attachment.url || '');
+    var safeLabel = escapeHtml(attachment.label || 'Attachment');
+    var attachmentType = getAttachmentType(attachment);
+
+    if (attachmentType === 'image') {
+        return (
+            '<figure class="appreciation-attachment-card">' +
+            '<img class="appreciation-attachment-image" src="' + safeUrl + '" alt="' + safeLabel + '">' +
+            '<figcaption class="appreciation-attachment-caption">' + safeLabel + '</figcaption>' +
+            '</figure>'
+        );
+    }
+
+    return (
+        '<div class="appreciation-attachment-card appreciation-attachment-card-document">' +
+        '<iframe class="appreciation-modal-frame" src="' + safeUrl + '" title="' + safeLabel + '"></iframe>' +
+        '<p class="appreciation-attachment-caption">' + safeLabel + '</p>' +
+        '</div>'
+    );
+}
+
+function buildAppreciationCardThumbs(attachments) {
+    var previewItems = safeArray(attachments).slice(0, 3).map(function (attachment, index) {
+        var attachmentType = getAttachmentType(attachment);
+        var safeUrl = escapeHtml(attachment.url || '');
+        var safeLabel = escapeHtml(attachment.label || ('Attachment ' + (index + 1)));
+
+        if (attachmentType === 'image') {
+            return '<img class="appreciation-card-thumb" src="' + safeUrl + '" alt="' + safeLabel + '">';
+        }
+
+        return '<div class="appreciation-card-thumb appreciation-card-thumb-doc"><i class="fas fa-file-lines" aria-hidden="true"></i><span>' + safeLabel + '</span></div>';
+    }).join('');
+
+    if (!previewItems) return '';
+
+    return '<div class="appreciation-card-media">' + previewItems + '</div>';
+}
+
+function buildAppreciationCard(item, itemId, index) {
+    var attachments = getAppreciationAttachments(item);
+    var attachmentCount = attachments.length;
+    var hasAttachment = attachmentCount > 0;
+
+    return (
+        '<button type="button" class="appreciation-card appreciation-card-trigger" data-appreciation-id="' + escapeHtml(itemId) + '" aria-label="Open appreciation ' + escapeHtml(item.title || '') + '">' +
+        '<span class="appreciation-card-count">0' + (index + 1) + '</span>' +
+        '<span class="appreciation-card-badge' + (hasAttachment ? ' is-live' : '') + '">' + (hasAttachment ? 'Attachment Ready' : 'Attachment Pending') + '</span>' +
+        '<div class="appreciation-card-meta-row">' +
+        '<span class="appreciation-card-date">' + escapeHtml(item.date || '') + '</span>' +
+        '<span class="appreciation-card-link">' + (hasAttachment ? String(attachmentCount) + ' Attachment' + (attachmentCount > 1 ? 's' : '') : escapeHtml(item.attachmentLabel || 'View attachment')) + '</span>' +
+        '</div>' +
+        '<h3 class="appreciation-card-title">' + escapeHtml(item.title || '') + '</h3>' +
+        '<p class="appreciation-card-org">' + escapeHtml(item.organization || '') + '</p>' +
+        buildAppreciationCardThumbs(attachments) +
+        '<p class="appreciation-card-summary">' + escapeHtml(item.summary || '') + '</p>' +
+        '<div class="appreciation-card-footer">' +
+        '<span class="appreciation-card-footer-note">Tap to open full appreciation preview</span>' +
+        '</div>' +
+        '</button>'
+    );
+}
+
+function buildAppreciationSection(items) {
+    var appreciations = safeArray(items);
+
+    appreciationPreviewStore = {};
+
+    appreciations.forEach(function (item, index) {
+        appreciationPreviewStore['appreciation-' + index] = item;
+    });
+
+    if (!appreciations.length) return '';
+
+    return (
+        '<div class="appreciation-showcase">' +
+        '<aside class="appreciation-spotlight">' +
+        '<p class="appreciation-spotlight-kicker">Recognition Snapshot</p>' +
+        '<h3 class="appreciation-spotlight-title">Professional appreciation that reflects delivery ownership, stakeholder confidence, and reliable execution.</h3>' +
+        '<p class="appreciation-spotlight-copy">This section highlights formal recognition connected to high-quality implementation, on-site collaboration, and business-facing software delivery.</p>' +
+        '<div class="appreciation-spotlight-points">' +
+        '<div><i class="fas fa-handshake-angle" aria-hidden="true"></i><span>Trusted client-side coordination</span></div>' +
+        '<div><i class="fas fa-shield-heart" aria-hidden="true"></i><span>Reliable execution under operational pressure</span></div>' +
+        '<div><i class="fas fa-file-signature" aria-hidden="true"></i><span>Attachment-ready appreciation documents</span></div>' +
+        '</div>' +
+        '</aside>' +
+        '<div class="appreciation-grid">' + appreciations.map(function (item, index) {
+            return buildAppreciationCard(item, 'appreciation-' + index, index);
+        }).join('') + '</div>' +
+        '</div>'
+    );
+}
+
+function buildAppreciationPreviewContent(item) {
+    var attachments = getAppreciationAttachments(item);
+    var hasAttachment = attachments.length > 0;
+    var highlights = safeArray(item && item.highlights).map(function (entry) {
+        return '<li>' + escapeHtml(entry) + '</li>';
+    }).join('');
+    var attachmentPreviews = attachments.map(buildAppreciationAttachmentPreview).join('');
+    var attachmentLinks = attachments.map(function (attachment, index) {
+        return '<a class="appreciation-modal-link" href="' + escapeHtml(attachment.url || '') + '" target="_blank" rel="noreferrer noopener">Open ' + escapeHtml(attachment.label || ('Attachment ' + (index + 1))) + '</a>';
+    }).join('');
+
+    return (
+        '<div class="appreciation-modal-shell">' +
+        '<div class="appreciation-modal-header">' +
+        '<p class="appreciation-modal-kicker">Appreciation Preview</p>' +
+        '<h3 id="appreciation-preview-title" class="appreciation-modal-title">' + escapeHtml(item.title || '') + '</h3>' +
+        '<p class="appreciation-modal-meta">' + escapeHtml(item.organization || '') + ' | ' + escapeHtml(item.date || '') + '</p>' +
+        '<p class="appreciation-modal-summary">' + escapeHtml(item.summary || '') + '</p>' +
+        '</div>' +
+        '<div class="appreciation-modal-layout">' +
+        '<aside class="appreciation-modal-insight">' +
+        '<p class="appreciation-modal-quote">' + escapeHtml(item.quote || '') + '</p>' +
+        '<ul class="appreciation-modal-list">' + highlights + '</ul>' +
+        '</aside>' +
+        '<div class="appreciation-modal-stage">' +
+        (hasAttachment
+            ? '<div class="appreciation-attachment-gallery">' + attachmentPreviews + '</div>'
+            : '<div class="appreciation-modal-empty"><i class="fas fa-paperclip" aria-hidden="true"></i><p>No attachment is connected yet. Add your appreciation image or PDF path inside the data object to preview it here.</p></div>') +
+        '</div>' +
+        '</div>' +
+        '<div class="appreciation-modal-footer">' +
+        (hasAttachment
+            ? attachmentLinks
+            : '<p class="appreciation-modal-note">Set one or more attachment paths in the appreciation entry, for example: file:///C:/Users/YourName/Pictures/appreciation1.png</p>') +
+        '</div>' +
+        '</div>'
+    );
+}
+
 /**
  * Returns the formatted hero contact line: "email | phone | location".
  * @param {{ email: string, phone: string, location: string }} personal
@@ -1296,6 +1480,7 @@ function bindResumeData(data) {
     setHtml('education-timeline',  buildTimeline(d.education, 'education'));
     setHtml('portfolio-container', buildProjects(d.projects));
     setHtml('certification-grid',  buildCertifications(d.certifications));
+    setHtml('appreciation-container', buildAppreciationSection(d.appreciations));
 
     setText('contact-summary',
         'Open to Software Engineer and Full Stack opportunities. ' +
@@ -1337,6 +1522,7 @@ function initialisePage() {
     setupTimelineDetailDialog();
     setupProjectDetailDialog();
     setupCertificatePreviewDialog();
+    setupAppreciationPreviewDialog();
     setupContactForm();
 
     // Apply initial scroll state
@@ -1690,6 +1876,103 @@ function setupCertificatePreviewDialog() {
 
         if (event.key === 'Escape') {
             closeCertificatePreview();
+        }
+    });
+}
+
+function ensureAppreciationPreviewModal() {
+    var modal = document.getElementById('appreciation-preview-modal');
+    if (modal) return modal;
+
+    modal = document.createElement('div');
+    modal.id = 'appreciation-preview-modal';
+    modal.className = 'appreciation-preview-modal';
+    modal.setAttribute('aria-hidden', 'true');
+    modal.innerHTML = '' +
+        '<div class="appreciation-preview-backdrop" data-appreciation-preview-close="true"></div>' +
+        '<div class="appreciation-preview-dialog" role="dialog" aria-modal="true" aria-labelledby="appreciation-preview-title">' +
+        '<button type="button" class="appreciation-preview-close" aria-label="Close appreciation preview" data-appreciation-preview-close="true">' +
+        '<i class="fas fa-xmark" aria-hidden="true"></i>' +
+        '</button>' +
+        '<div id="appreciation-preview-content"></div>' +
+        '</div>';
+
+    document.body.appendChild(modal);
+    return modal;
+}
+
+function openAppreciationPreview(itemId, trigger) {
+    var modal = ensureAppreciationPreviewModal();
+    var content = document.getElementById('appreciation-preview-content');
+    var dialog = modal ? modal.querySelector('.appreciation-preview-dialog') : null;
+    var item = appreciationPreviewStore[itemId];
+
+    if (!modal || !content || !item) return;
+
+    appreciationPreviewLastTrigger = trigger || null;
+    content.innerHTML = buildAppreciationPreviewContent(item);
+    modal.classList.add('is-open');
+    modal.setAttribute('aria-hidden', 'false');
+    document.body.classList.add('has-modal-open');
+    if (dialog) dialog.scrollTop = 0;
+
+    var closeButton = modal.querySelector('.appreciation-preview-close');
+    if (closeButton) closeButton.focus();
+}
+
+function closeAppreciationPreview() {
+    var modal = document.getElementById('appreciation-preview-modal');
+    if (!modal) return;
+
+    modal.classList.remove('is-open');
+    modal.setAttribute('aria-hidden', 'true');
+    document.body.classList.remove('has-modal-open');
+
+    if (appreciationPreviewLastTrigger) {
+        appreciationPreviewLastTrigger.focus();
+        appreciationPreviewLastTrigger = null;
+    }
+}
+
+function trapAppreciationPreviewFocus(event) {
+    var modal = document.getElementById('appreciation-preview-modal');
+    if (!modal || !modal.classList.contains('is-open') || event.key !== 'Tab') return;
+
+    var focusable = modal.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+    if (!focusable.length) return;
+
+    var first = focusable[0];
+    var last = focusable[focusable.length - 1];
+
+    if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+    } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+    }
+}
+
+function setupAppreciationPreviewDialog() {
+    ensureAppreciationPreviewModal();
+
+    document.addEventListener('click', function (event) {
+        var trigger = event.target.closest('.appreciation-card-trigger');
+        if (trigger) {
+            openAppreciationPreview(trigger.getAttribute('data-appreciation-id'), trigger);
+            return;
+        }
+
+        if (event.target.closest('[data-appreciation-preview-close="true"]')) {
+            closeAppreciationPreview();
+        }
+    });
+
+    document.addEventListener('keydown', function (event) {
+        trapAppreciationPreviewFocus(event);
+
+        if (event.key === 'Escape') {
+            closeAppreciationPreview();
         }
     });
 }
