@@ -1542,8 +1542,10 @@ function bindPersonalSection(personal) {
     setText('about-summary',     personal.summary  || '');
     setText('about-location',    personal.location || '');
     setText('contact-location',  personal.location || '');
-    setText('contact-phone',     personal.phone    || '');
-    setText('contact-email',     personal.email    || '');
+    setText('contact-phone-link', personal.phone   || '');
+    setText('contact-email-link', personal.email   || '');
+    setAttr('contact-phone-link', 'href', personal.phone ? 'tel:' + String(personal.phone).replace(/\s+/g, '') : '#');
+    setAttr('contact-email-link', 'href', personal.email ? 'mailto:' + personal.email : '#');
 
     setAttr('profile-image', 'src', personal.image || '');
     setAttr('profile-image', 'alt', (personal.name || 'Profile') + ' photo');

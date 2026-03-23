@@ -2936,6 +2936,18 @@ section {
 .my-details-info-container span {
     margin-left: 0.4rem;
 }
+.contact-detail-link {
+    margin-left: 0.4rem;
+    color: rgba(255, 255, 255, 0.9);
+    text-decoration: none;
+    line-height: 1.5;
+}
+.contact-detail-link:hover,
+.contact-detail-link:focus-visible {
+    color: #ffffff;
+    text-decoration: underline;
+    outline: none;
+}
 
 .my-details-info-container {
     display: flex;
