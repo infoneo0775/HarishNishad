@@ -22,6 +22,7 @@ body {
     font-family: 'Manrope', sans-serif;
     font-size: 16px;
     color: var(--ink-700);
+    overflow-x: hidden;
     background:
         radial-gradient(circle at 100% -10%, rgba(247, 210, 67, 0.45), transparent 32%),
         radial-gradient(circle at 0% 20%, rgba(12, 131, 31, 0.08), transparent 28%),
@@ -29,6 +30,10 @@ body {
 }
 
 body.has-modal-open {
+    overflow: hidden;
+}
+
+body.nav-open {
     overflow: hidden;
 }
 
@@ -44,6 +49,11 @@ h6 {
 
 a {
     color: inherit;
+}
+
+img,
+iframe {
+    max-width: 100%;
 }
 
 #body-header {
@@ -114,6 +124,48 @@ a {
     background: var(--blinkit-yellow);
     border-color: var(--blinkit-yellow);
     transform: translateY(-1px);
+}
+
+.nav-toggle {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 0.28rem;
+    width: 2.85rem;
+    height: 2.85rem;
+    padding: 0;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.08);
+    color: #fff;
+    cursor: pointer;
+    transition: background 0.25s ease, border-color 0.25s ease, transform 0.25s ease;
+}
+
+.nav-toggle:hover {
+    background: rgba(255, 255, 255, 0.14);
+    border-color: rgba(247, 210, 67, 0.42);
+}
+
+.nav-toggle-bar {
+    width: 1.15rem;
+    height: 2px;
+    border-radius: 999px;
+    background: currentColor;
+    transition: transform 0.25s ease, opacity 0.25s ease;
+}
+
+.nav-toggle.is-active .nav-toggle-bar:nth-child(1) {
+    transform: translateY(6px) rotate(45deg);
+}
+
+.nav-toggle.is-active .nav-toggle-bar:nth-child(2) {
+    opacity: 0;
+}
+
+.nav-toggle.is-active .nav-toggle-bar:nth-child(3) {
+    transform: translateY(-6px) rotate(-45deg);
 }
 
 .text-center {
@@ -3515,11 +3567,11 @@ button:focus {
     }
 
     .hero-copy {
-        text-align: center;
+        text-align: left;
     }
 
     .hero-quick-facts {
-        justify-content: center;
+        justify-content: flex-start;
     }
 
     .skills-story-panel {
@@ -3572,7 +3624,7 @@ button:focus {
     section {
         width: 96vw;
         padding: 1rem 0.85rem 1.4rem;
-        border-radius: 20px;
+        border-radius: 18px;
     }
 
     #about {
@@ -3689,7 +3741,6 @@ button:focus {
     background: linear-gradient(180deg, #ffe680, var(--blinkit-yellow));
     border-color: rgba(247, 210, 67, 0.95);
     box-shadow: 0 8px 18px rgba(247, 210, 67, 0.28);
-    margin-top: -90px;
 }
 
 #body-header nav.nav-scrolled .nav-brand {
@@ -3955,6 +4006,107 @@ footer {
 }
 
 @media (max-width: 768px) {
+    #body-header nav {
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        padding: 0.7rem 1rem;
+    }
+
+    #body-header nav.nav-scrolled {
+        top: 0.55rem;
+        left: 0.7rem;
+        right: 0.7rem;
+        padding: 0.7rem 0.85rem;
+        border-radius: 18px;
+    }
+
+    #body-header nav.is-menu-open {
+        top: 0.55rem;
+        left: 0.7rem;
+        right: 0.7rem;
+        padding: 0.7rem 0.85rem 0.85rem;
+        border-radius: 18px;
+        background:
+            radial-gradient(circle at top right, rgba(247, 210, 67, 0.24), transparent 22%),
+            linear-gradient(135deg, rgba(17, 17, 17, 0.96), rgba(12, 131, 31, 0.92));
+        backdrop-filter: blur(14px);
+        -webkit-backdrop-filter: blur(14px);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        box-shadow: 0 16px 40px rgba(17, 17, 17, 0.22);
+    }
+
+    .nav-toggle {
+        display: inline-flex;
+    }
+
+    #body-header .nav-menu {
+        order: 3;
+        flex: 0 0 100%;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.45rem;
+        max-height: 0;
+        margin-top: 0;
+        padding: 0;
+        overflow: hidden;
+        opacity: 0;
+        pointer-events: none;
+        transform: translateY(-8px);
+        transition: max-height 0.3s ease, opacity 0.25s ease, transform 0.25s ease, margin-top 0.25s ease;
+    }
+
+    #body-header nav.is-menu-open .nav-menu {
+        max-height: 70vh;
+        margin-top: 0.8rem;
+        opacity: 1;
+        pointer-events: auto;
+        transform: translateY(0);
+    }
+
+    .nav-menu li {
+        display: block;
+        width: 100%;
+    }
+
+    .nav-menu li a,
+    #body-header nav.nav-scrolled .nav-menu li a {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        min-height: 46px;
+        padding: 0.85rem 1rem;
+        border-radius: 14px;
+    }
+
+    .hero-quick-facts {
+        gap: 0.6rem;
+    }
+
+    .hero-fact {
+        flex: 1 1 calc(50% - 0.6rem);
+        min-width: 0;
+        padding: 0.75rem 0.85rem;
+    }
+
+    .hero-cta {
+        align-items: center;
+    }
+
+    .hero-cta a:not([aria-label="Download Resume"]) {
+        flex: 1 1 100%;
+    }
+
+    .about-stats-row {
+        justify-content: center;
+    }
+
+    .stat-item {
+        flex: 1 1 calc(50% - 0.65rem);
+        min-width: 0;
+    }
+
     .hero-available-badge {
         font-size: 0.75rem;
         padding: 0.3rem 0.75rem;
@@ -3982,5 +4134,375 @@ footer {
 
     .stat-label {
         font-size: 0.72rem;
+    }
+
+    #contact-form-container,
+    #my-details-container {
+        width: 100%;
+    }
+}
+
+@media (max-width: 600px) {
+    #body-header {
+        min-height: auto;
+        padding: 1rem 0 1.35rem;
+    }
+
+    #name-social-container {
+        margin-top: 7rem;
+        width: calc(100vw - 1rem);
+    }
+
+    .hero-copy,
+    .about-identity-copy,
+    .about-content-card,
+    .skills-story-panel,
+    .section-story-panel,
+    .project-overview-panel,
+    .cert-feature-card,
+    .appreciation-spotlight,
+    #contact-form-container,
+    #my-details-container {
+        text-align: left;
+    }
+
+    .hero-shell,
+    .about-showcase,
+    .skills-showcase,
+    .section-showcase,
+    .project-showcase,
+    .certification-showcase,
+    .appreciation-showcase,
+    .appreciation-modal-layout {
+        gap: 0.8rem;
+    }
+
+    #my-name {
+        font-size: clamp(1.85rem, 10vw, 2.7rem);
+        line-height: 1.08;
+    }
+
+    #my-tagline,
+    #hero-contact-line,
+    .section-intro {
+        font-size: 0.9rem;
+        line-height: 1.55;
+    }
+
+    .hero-update-badge,
+    .hero-available-badge {
+        width: fit-content;
+        margin-left: 0;
+        margin-right: 0;
+    }
+
+    .hero-panel,
+    .skills-story-panel,
+    .section-story-panel,
+    .project-overview-panel,
+    .cert-feature-card,
+    .appreciation-spotlight,
+    #contact-form-container,
+    #my-details-container {
+        padding: 0.9rem;
+        border-radius: 14px;
+    }
+
+    section {
+        width: calc(100vw - 1rem);
+        margin-bottom: 1rem;
+        padding: 0.9rem 0.7rem 1.1rem;
+        border-radius: 14px;
+    }
+
+    #about {
+        margin-top: -2.5rem;
+    }
+
+    #my-image {
+        width: 8.75rem;
+        height: 8.75rem;
+    }
+
+    .skills-display,
+    .skill-category-grid,
+    .project-case-grid,
+    .certification-gallery,
+    .appreciation-grid,
+    .project-detail-grid,
+    .project-detail-alt-grid,
+    .project-insight-grid,
+    .project-detail-info-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .hero-quick-facts {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        width: 100%;
+    }
+
+    .hero-cta {
+        justify-content: flex-start;
+        width: 100%;
+    }
+
+    .social-icons {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: flex-start;
+    }
+
+    .section-heading {
+        text-align: left;
+    }
+
+    .section-heading::after {
+        margin-left: 0;
+        margin-right: 0;
+    }
+
+    .section-intro {
+        width: 100%;
+        margin: -0.2rem 0 1rem;
+        text-align: left;
+    }
+
+    .about-presence-row,
+    .project-overview-tags,
+    .project-tech-row,
+    .project-detail-tech-grid,
+    .project-detail-top-tech,
+    .project-detail-links,
+    .cert-feature-meta,
+    .appreciation-modal-footer {
+        justify-content: flex-start;
+    }
+
+    .about-location-row {
+        width: 100%;
+        justify-content: flex-start;
+    }
+
+    .about-stats-row {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        width: 100%;
+    }
+
+    .stat-item,
+    .hero-fact {
+        border-radius: 12px;
+    }
+
+    .timeline-container,
+    .project-case-card,
+    .cert-card,
+    .appreciation-card,
+    .timeline-detail-dialog,
+    .project-detail-dialog,
+    .certificate-preview-dialog,
+    .appreciation-preview-dialog,
+    .contact-popup-card {
+        border-radius: 14px;
+    }
+
+    .timeline-container,
+    .project-case-card,
+    .cert-card,
+    .appreciation-card {
+        padding: 0.8rem;
+        box-shadow: 0 8px 20px rgba(17, 17, 17, 0.08);
+    }
+
+    .project-overview-stats {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .project-overview-stat,
+    .project-case-highlights,
+    .cert-feature-actions,
+    .appreciation-spotlight-points {
+        margin-top: 0.8rem;
+    }
+
+    .project-case-title,
+    .cert-card-title,
+    .appreciation-card-title,
+    .experience-designation {
+        line-height: 1.4;
+    }
+
+    .my-details-info-container {
+        gap: 0.5rem;
+    }
+
+    .skill-spotlight-top,
+    .project-case-top,
+    .project-detail-header,
+    .project-detail-meta-row,
+    .project-detail-info-card,
+    .appreciation-card-meta-row,
+    .appreciation-card-footer,
+    .cert-card-footer {
+        grid-template-columns: 1fr;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .timeline {
+        width: 100%;
+    }
+
+    .timeline-divider {
+        display: none;
+    }
+
+    .timeline-box,
+    .timeline-box:nth-child(2n) {
+        width: 100%;
+        left: 0;
+        padding: 0;
+        text-align: left;
+    }
+
+    .timeline-box::after,
+    .timeline-box:nth-child(2n)::after,
+    .timeline-box:nth-child(2n + 1)::after {
+        display: none;
+    }
+
+    .timeline-logo {
+        position: static;
+        margin-bottom: 0.65rem;
+    }
+
+    .experience-designation {
+        padding-left: 0;
+    }
+
+    .timeline-container,
+    .project-case-card,
+    .cert-card,
+    .appreciation-card,
+    .timeline-detail-dialog,
+    .project-detail-dialog,
+    .certificate-preview-dialog,
+    .appreciation-preview-dialog,
+    .contact-popup-card {
+        border-radius: 14px;
+    }
+
+    .project-overview-stats,
+    .project-case-footer,
+    .project-detail-links,
+    .cert-feature-actions,
+    .appreciation-modal-footer {
+        gap: 0.55rem;
+    }
+
+    .project-case-highlights li,
+    .skills-story-item,
+    .section-story-item,
+    .appreciation-spotlight-points div,
+    .hero-focus-item {
+        gap: 0.5rem;
+    }
+
+    .cert-feature-button,
+    .project-detail-link,
+    .certificate-modal-link,
+    .appreciation-modal-link,
+    #contact-form button[type="submit"] {
+        width: 100%;
+        min-width: 0;
+        justify-content: center;
+    }
+
+    .certificate-preview-dialog,
+    .appreciation-preview-dialog,
+    .project-detail-dialog,
+    .timeline-detail-dialog {
+        width: min(100%, calc(100vw - 0.5rem));
+        max-height: 92vh;
+        padding: 0.8rem;
+    }
+
+    .certificate-modal-stage,
+    .certificate-modal-frame,
+    .certificate-modal-empty,
+    .appreciation-modal-stage,
+    .appreciation-modal-frame,
+    .appreciation-modal-empty {
+        min-height: 34vh;
+    }
+
+    .appreciation-card-media {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .my-details-info-container {
+        align-items: flex-start;
+    }
+}
+
+@media (max-width: 420px) {
+    #body-header nav,
+    #body-header nav.nav-scrolled,
+    #body-header nav.is-menu-open {
+        left: 0.45rem;
+        right: 0.45rem;
+        top: 0.45rem;
+        padding: 0.65rem 0.7rem;
+        border-radius: 16px;
+    }
+
+    #name-social-container {
+        margin-top: 6.5rem;
+    }
+
+    .hero-fact,
+    .stat-item {
+        flex-basis: 100%;
+    }
+
+    .hero-quick-facts,
+    .about-stats-row,
+    .project-overview-stats,
+    .skill-category-grid,
+    .appreciation-card-media {
+        grid-template-columns: 1fr;
+    }
+
+    .hero-cta {
+        gap: 0.55rem;
+    }
+
+    .hero-cta a,
+    .hero-cta a:not([aria-label="Download Resume"]) {
+        width: 100%;
+        min-width: 0;
+    }
+
+    .hero-cta a[aria-label="Download Resume"] {
+        width: 100%;
+        min-height: 46px;
+        border-radius: 12px;
+    }
+
+    .company-identity,
+    .project-detail-role,
+    .project-detail-links,
+    .appreciation-modal-footer {
+        align-items: flex-start;
+    }
+
+    .social-icons li {
+        margin: 0 0.2rem;
+    }
+
+    #back-to-top {
+        right: 0.8rem;
+        bottom: 0.8rem;
     }
 }

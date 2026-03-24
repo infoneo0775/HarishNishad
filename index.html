@@ -29,7 +29,12 @@
     <header id="body-header">
         <nav aria-label="Primary navigation">
             <a class="nav-brand" href="#body-header" aria-label="Home">HN</a>
-            <ul class="horizontal-list nav-menu">
+            <button id="nav-toggle" class="nav-toggle" type="button" aria-expanded="false" aria-controls="primary-nav-menu" aria-label="Open navigation menu">
+                <span class="nav-toggle-bar"></span>
+                <span class="nav-toggle-bar"></span>
+                <span class="nav-toggle-bar"></span>
+            </button>
+            <ul id="primary-nav-menu" class="horizontal-list nav-menu">
                 <li><a href="#about">About</a></li>
                 <li><a href="#skills">Skills</a></li>
                 <li><a href="#experience">Experience</a></li>

@@ -1613,6 +1613,7 @@ function initialisePage() {
 
     // Cache DOM refs used in scroll handler
     _nav        = document.querySelector('#body-header nav');
+    _navToggle  = document.getElementById('nav-toggle');
     _backToTop  = document.getElementById('back-to-top');
     _scrollProg = document.getElementById('scroll-progress');
 
@@ -1624,6 +1625,7 @@ function initialisePage() {
     }
 
     // Set up scroll-reveal animations
+    setupMobileNav();
     setupReveal();
     setupTimelineAnimations();
     setupTimelineDetailDialog();
@@ -1638,8 +1640,71 @@ function initialisePage() {
 
 // ── Scroll Handler ───────────────────────────────────────────
 var _nav        = null;
+var _navToggle  = null;
 var _backToTop  = null;
 var _scrollProg = null;
+
+function isMobileNavViewport() {
+    return window.innerWidth <= 768;
+}
+
+function setMobileNavState(isOpen) {
+    if (!_nav || !_navToggle) {
+        return;
+    }
+
+    var shouldOpen = Boolean(isOpen && isMobileNavViewport());
+
+    _nav.classList.toggle('is-menu-open', shouldOpen);
+    _navToggle.classList.toggle('is-active', shouldOpen);
+    _navToggle.setAttribute('aria-expanded', shouldOpen ? 'true' : 'false');
+    _navToggle.setAttribute('aria-label', shouldOpen ? 'Close navigation menu' : 'Open navigation menu');
+    document.body.classList.toggle('nav-open', shouldOpen);
+}
+
+function closeMobileNav() {
+    setMobileNavState(false);
+}
+
+function setupMobileNav() {
+    if (!_nav || !_navToggle) {
+        return;
+    }
+
+    _navToggle.addEventListener('click', function () {
+        setMobileNavState(!_nav.classList.contains('is-menu-open'));
+    });
+
+    document.querySelectorAll('.nav-menu a[href^="#"]').forEach(function (link) {
+        link.addEventListener('click', closeMobileNav);
+    });
+
+    window.addEventListener('resize', function () {
+        if (!isMobileNavViewport()) {
+            closeMobileNav();
+        }
+    });
+
+    document.addEventListener('keydown', function (event) {
+        if (event.key === 'Escape') {
+            closeMobileNav();
+        }
+    });
+
+    document.addEventListener('click', function (event) {
+        if (!_nav.classList.contains('is-menu-open')) {
+            return;
+        }
+
+        if (_nav.contains(event.target)) {
+            return;
+        }
+
+        closeMobileNav();
+    });
+
+    closeMobileNav();
+}
 
 function handleScroll() {
     var scrollY = window.scrollY || window.pageYOffset;
