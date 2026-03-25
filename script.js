@@ -14,6 +14,85 @@ var COMPANY_LOGOS = {
     primafelicitas: 'https://resume0775.s3.eu-north-1.amazonaws.com/primafelicitas.png',
     ignou: 'https://resume0775.s3.eu-north-1.amazonaws.com/ignou.webp'
 };
+function escapeSvgText(value) {
+    return String(value || '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+}
+
+function buildProjectPosterTitleRows(value) {
+    var words = String(value || 'Project Case Study').split(/\s+/).filter(Boolean);
+    var rows = [];
+    var current = '';
+
+    words.forEach(function (word) {
+        var next = current ? current + ' ' + word : word;
+        if (next.length > 22 && current) {
+            rows.push(current);
+            current = word;
+            return;
+        }
+        current = next;
+    });
+
+    if (current) {
+        rows.push(current);
+    }
+
+    return rows.slice(0, 3).map(escapeSvgText);
+}
+
+function buildProjectPoster(config) {
+    var title = escapeSvgText(config.title || 'Project Case Study');
+    var subtitle = escapeSvgText(config.subtitle || 'Delivery Snapshot');
+    var titleRows = buildProjectPosterTitleRows(config.title || 'Project Case Study');
+    var accentA = config.accentA || '#f7d243';
+    var accentB = config.accentB || '#0c831f';
+    var accentC = config.accentC || '#163326';
+    var svg = '' +
+        '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 720" role="img" aria-label="' + title + '">' +
+        '<defs>' +
+        '<linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">' +
+        '<stop offset="0%" stop-color="#0d1512"/>' +
+        '<stop offset="100%" stop-color="#17241e"/>' +
+        '</linearGradient>' +
+        '<linearGradient id="panel" x1="0" y1="0" x2="1" y2="1">' +
+        '<stop offset="0%" stop-color="' + accentA + '" stop-opacity="0.95"/>' +
+        '<stop offset="100%" stop-color="' + accentB + '" stop-opacity="0.92"/>' +
+        '</linearGradient>' +
+        '<linearGradient id="line" x1="0" y1="0" x2="1" y2="1">' +
+        '<stop offset="0%" stop-color="#ffffff" stop-opacity="0.55"/>' +
+        '<stop offset="100%" stop-color="#ffffff" stop-opacity="0.08"/>' +
+        '</linearGradient>' +
+        '</defs>' +
+        '<rect width="1200" height="720" fill="url(#bg)"/>' +
+        '<circle cx="1040" cy="140" r="200" fill="' + accentA + '" fill-opacity="0.18"/>' +
+        '<circle cx="140" cy="620" r="220" fill="' + accentB + '" fill-opacity="0.16"/>' +
+        '<rect x="56" y="56" width="1088" height="608" rx="40" fill="none" stroke="url(#line)" stroke-width="2"/>' +
+        '<rect x="92" y="96" width="520" height="528" rx="32" fill="url(#panel)"/>' +
+        '<rect x="660" y="120" width="420" height="24" rx="12" fill="#ffffff" fill-opacity="0.14"/>' +
+        '<rect x="660" y="176" width="360" height="24" rx="12" fill="#ffffff" fill-opacity="0.1"/>' +
+        '<rect x="660" y="232" width="296" height="24" rx="12" fill="#ffffff" fill-opacity="0.1"/>' +
+        '<rect x="660" y="338" width="420" height="148" rx="28" fill="#ffffff" fill-opacity="0.06" stroke="#ffffff" stroke-opacity="0.12"/>' +
+        '<rect x="696" y="374" width="144" height="16" rx="8" fill="#ffffff" fill-opacity="0.16"/>' +
+        '<rect x="696" y="414" width="306" height="16" rx="8" fill="#ffffff" fill-opacity="0.1"/>' +
+        '<rect x="696" y="448" width="248" height="16" rx="8" fill="#ffffff" fill-opacity="0.1"/>' +
+        '<text x="144" y="178" font-family="Segoe UI, Arial, sans-serif" font-size="28" font-weight="700" letter-spacing="6" fill="#f6ffe9" fill-opacity="0.84">PROJECT WORK</text>' +
+        '<text x="144" y="272" font-family="Segoe UI, Arial, sans-serif" font-size="62" font-weight="700" fill="#0f1b14">' + subtitle + '</text>' +
+        '<text x="144" y="372" font-family="Segoe UI, Arial, sans-serif" font-size="42" font-weight="800" fill="#ffffff">' +
+        titleRows.map(function (row, index) {
+            return '<tspan x="144" dy="' + (index === 0 ? '0' : '52') + '">' + row + '</tspan>';
+        }).join('') +
+        '</text>' +
+        '<text x="144" y="588" font-family="Segoe UI, Arial, sans-serif" font-size="26" font-weight="600" fill="#efffde" fill-opacity="0.92">Case Study Preview</text>' +
+        '<rect x="92" y="96" width="520" height="528" rx="32" fill="none" stroke="' + accentC + '" stroke-opacity="0.3" stroke-width="2"/>' +
+        '</svg>';
+
+    return 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(svg);
+}
 
 // ── Static Resume Data ───────────────────────────────────────
 var RESUME_DATA = {
@@ -306,59 +385,75 @@ var RESUME_DATA = {
             ]
         },
         {
-            title: 'Finhaat Claims Workflow and Dashboard',
-            domain: 'Financial Services',
-            company: 'CodeFire',
-            period: 'May 2023 - Sep 2024',
-            icon: 'fas fa-chart-line',
-            summary: 'Claims initiation and approval workflow system backed by dashboards that improved operational clarity and reduced manual processing effort.',
-            techStack: ['Node.js', 'JavaScript', 'Dashboards', 'Workflow Automation', 'Redis', 'AWS'],
+            title: 'Finhaat – B2B Insurance Distribution Platform (FinSAAS)',
+            domain: 'InsurTech / B2B SaaS / Financial Services',
+            company: 'Finhaat Technologies Pvt Ltd',
+            period: 'Jun 2023 – May 2024',
+            icon: 'fas fa-shield-alt',
+            summary: 'Backend engineering for FinSAAS — Finhaat\'s institutional B2B insurance distribution platform — covering policy issuance APIs, claims management, partner onboarding, RBAC, and MIS reporting for 200+ institutional partners across India.',
+            techStack: ['Node.js', 'REST APIs', 'MySQL', 'RBAC', 'Insurance APIs', 'Document Management', 'Policy Issuance', 'Claims Workflow'],
             quickHighlights: [
-                'Led claim initiation and approval workflow development.',
-                'Delivered dashboard modules for business visibility.',
-                'Reduced manual processing by 40%.',
-                'Worked directly with clients and engineering teams during delivery.'
+                'Built backend APIs for end-to-end digital policy issuance integrated with multiple insurer systems.',
+                'Developed claims submission and tracking module with real-time status updates across insurers.',
+                'Implemented role-based access control (RBAC) for institutional partner hierarchies and compliance requirements.',
+                'Engineered MIS and reporting APIs providing trend analysis and performance dashboards for institutional partners.'
             ],
-            businessOverview: 'Built to support financial service operations, this workflow system streamlined how claims moved from initiation through approval while giving teams visibility through dashboard-driven status tracking.',
-            problemStatement: 'Manual claim handling created operational drag, reduced visibility, and increased coordination overhead across teams responsible for initiating, validating, and approving requests.',
-            role: 'Software Engineer',
+            businessOverview: 'Finhaat is a B2B platform transforming financial services delivery for emerging India. FinSAAS is its institutional arm — a unified assisted digital platform offering insurance distribution, issuance, and claims management across multiple insurers and product lines (Health, Life, Cattle, Parametric, Assets) to 200+ institutional partners covering 75 lakh+ lives.',
+            problemStatement: 'Institutional partners needed a single digital platform to manage insurance product journeys end-to-end — from quote to issuance to claims — across multiple insurers, while maintaining compliance, role management, and real-time visibility into their portfolio performance.',
+            role: 'Software Engineer (Backend)',
             responsibilities: [
-                'Led delivery of claim workflow modules and supporting dashboards.',
-                'Translated business process requirements into application logic.',
-                'Coordinated with clients and team members throughout implementation.'
+                'Developed and maintained backend REST APIs powering the FinSAAS institutional platform.',
+                'Built policy issuance pipeline integrating with external insurer APIs for instant digital policy generation.',
+                'Implemented the claims management module handling submission, tracking, and real-time status resolution.',
+                'Designed RBAC architecture to support institutional partner hierarchies with compliance and audit requirements.',
+                'Built MIS and reporting layer delivering dashboard metrics, trend analysis, and partner performance data.',
+                'Developed secure document storage and retrieval APIs for policy and claims documentation.'
             ],
             featuresImplemented: [
-                'Claim initiation workflow.',
-                'Approval lifecycle handling.',
-                'Dashboard views for operational tracking.',
-                'Workflow paths aligned with business review stages.'
+                'Policy issuance APIs: quote generation, proposal submission, instant digital issuance across Health, Life, Cattle, Parametric, and Asset products.',
+                'Multi-insurer API integration for real-time processing and response handling.',
+                'Claims journey: digital submission, document upload, real-time query and response, status tracking.',
+                'Unified dashboard APIs: portfolio overview, insurer-wise splits, product-wise performance metrics.',
+                'RBAC system: role definition, permission management, compliance controls for institutional partner staff.',
+                'Secure document management: upload, storage, and retrieval for policy and claims documents.',
+                'MIS reporting: trend analysis, forecasting data endpoints, partner performance aggregation.',
+                'Partner onboarding APIs: institutional registration, configuration, and product activation flows.',
+                'Regulatory update pipeline: backend support for rapid product journey changes driven by compliance requirements.'
             ],
-            technologiesUsed: ['Node.js', 'Redis', 'AWS', 'PM2', 'Jenkins', 'JavaScript'],
+            technologiesUsed: ['Node.js', 'Express', 'MySQL', 'REST APIs', 'RBAC', 'Third-party Insurer APIs', 'Document Management', 'Cron Jobs', 'MIS Reporting'],
             challengesFaced: [
-                'Reducing manual effort while preserving workflow control.',
-                'Providing visibility across different processing stages.',
-                'Supporting delivery quality while coordinating directly with clients.'
+                'Integrating with multiple insurer APIs that had inconsistent response formats and reliability characteristics.',
+                'Designing an RBAC model flexible enough to support varied institutional partner org structures while enforcing compliance.',
+                'Building a claims workflow that handled real-time status updates across asynchronous insurer systems.',
+                'Ensuring document management met regulatory standards for secure storage and retrieval at scale.'
             ],
             solutionsDelivered: [
-                'Converted manual claim handling into structured digital workflows.',
-                'Added dashboards to expose workflow state and pending actions.',
-                'Delivered modules that supported faster and more traceable operations.'
+                'Built an insurer API abstraction layer that normalised responses across providers and handled retry and fallback logic.',
+                'Designed a configurable RBAC schema that mapped to institutional hierarchy levels without hardcoding role structures.',
+                'Implemented an event-driven claims status engine with polling and webhook support for asynchronous insurer responses.',
+                'Developed a document management service with access-controlled storage and structured retrieval tied to policy and claim IDs.'
             ],
             businessImpact: [
-                'Reduced manual processing by 40%.',
-                'Improved visibility for teams managing financial workflows.',
-                'Created a stronger operational backbone for claim handling.'
+                'Supported 200+ institutional partners and 75 lakh+ lives covered through the FinSAAS platform.',
+                'Enabled instant digital policy issuance replacing manual, paper-based processes for partner field teams.',
+                'Reduced claims processing time through real-time digital submission and status tracking across insurers.',
+                'Provided institutional partners with real-time MIS dashboards to monitor portfolio performance and compliance.'
             ],
             moduleBreakdown: [
-                'Claim initiation',
-                'Approval workflows',
-                'Operational dashboards',
-                'Business visibility modules'
+                'Partner onboarding and configuration',
+                'Policy issuance and multi-insurer API integration',
+                'Claims submission and status tracking',
+                'RBAC and compliance management',
+                'Document management (policy and claims)',
+                'Unified dashboard and MIS reporting',
+                'Trend analysis and forecasting data layer',
+                'Regulatory update support pipeline'
             ],
             architecturePoints: [
-                'Workflow logic designed around business approval stages.',
-                'Dashboard layer used to expose operational progress.',
-                'Platform support included deployment-aware engineering practices.'
+                'Backend structured as feature-scoped API modules with partner-level data isolation for multi-tenant institutional use.',
+                'Insurer integrations abstracted behind a unified adapter layer to normalise formats and handle failures gracefully.',
+                'RBAC implemented as a configurable permission matrix supporting dynamic institutional hierarchy mapping.',
+                'Claims and issuance flows designed as stateful pipelines with audit trails and async status reconciliation support.'
             ]
         },
         {
@@ -734,6 +829,84 @@ var RESUME_DATA = {
         }
     ]
 };
+
+var PROJECT_IMAGE_MAP = {
+    'GAIL CNG Operations Platform': buildProjectPoster({
+        title: 'GAIL CNG Operations Platform',
+        subtitle: 'Energy Operations',
+        accentA: '#f7d243',
+        accentB: '#0c831f',
+        accentC: '#244b28'
+    }),
+    'GAIL Reporting, PDF and Excel Automation': buildProjectPoster({
+        title: 'Reporting, PDF and Excel Automation',
+        subtitle: 'Reporting Automation',
+        accentA: '#ffb347',
+        accentB: '#2f7d7a',
+        accentC: '#184847'
+    }),
+    'GAILGAS Intranet Application Suite': buildProjectPoster({
+        title: 'GAILGAS Intranet Application Suite',
+        subtitle: 'Internal Portal',
+        accentA: '#7ed957',
+        accentB: '#135d66',
+        accentC: '#1c4a50'
+    }),
+    'Finhaat – B2B Insurance Distribution Platform (FinSAAS)': buildProjectPoster({
+        title: 'Finhaat B2B Insurance Distribution',
+        subtitle: 'InsurTech Platform',
+        accentA: '#00c2ff',
+        accentB: '#106c8b',
+        accentC: '#124c61'
+    }),
+    'Finhaat Data Validation and Scheduled Services': buildProjectPoster({
+        title: 'Finhaat Validation and Scheduled Services',
+        subtitle: 'Workflow Automation',
+        accentA: '#ff8a5b',
+        accentB: '#7f2ccb',
+        accentC: '#4f226f'
+    }),
+    'Aware Traceability and Digital Product Passport': buildProjectPoster({
+        title: 'Aware Traceability and Product Passport',
+        subtitle: 'Supply Chain',
+        accentA: '#82c91e',
+        accentB: '#2b8a3e',
+        accentC: '#275b2f'
+    }),
+    'ClojBug Test Management Platform': buildProjectPoster({
+        title: 'ClojBug Test Management Platform',
+        subtitle: 'QA Engineering',
+        accentA: '#ffd166',
+        accentB: '#ef476f',
+        accentC: '#7b2d45'
+    }),
+    'Physician Campaign Management Platform': buildProjectPoster({
+        title: 'Physician Campaign Management',
+        subtitle: 'Healthcare Technology',
+        accentA: '#80ed99',
+        accentB: '#2d6a4f',
+        accentC: '#244a3a'
+    }),
+    'Mailiam – Email Marketing SaaS Platform': buildProjectPoster({
+        title: 'Mailiam Email Marketing Platform',
+        subtitle: 'Email Marketing SaaS',
+        accentA: '#f4a261',
+        accentB: '#264653',
+        accentC: '#203942'
+    })
+};
+
+safeArray(RESUME_DATA.projects).forEach(function (project) {
+    if (!project.image) {
+        project.image = PROJECT_IMAGE_MAP[project.title] || buildProjectPoster({
+            title: project.title,
+            subtitle: project.domain,
+            accentA: '#f7d243',
+            accentB: '#0c831f',
+            accentC: '#244b28'
+        });
+    }
+});
 
 // ── State ────────────────────────────────────────────────────
 var progressBars = [];
@@ -1138,6 +1311,18 @@ function buildProjectOverviewPanel(items) {
     );
 }
 
+function buildProjectImage(project, wrapperClass, imageClass) {
+    if (!project || !project.image) {
+        return '';
+    }
+
+    return (
+        '<div class="' + escapeHtml(wrapperClass) + '">' +
+        '<img class="' + escapeHtml(imageClass) + '" src="' + escapeHtml(project.image) + '" alt="' + escapeHtml((project.title || 'Project') + ' preview') + '" loading="lazy" decoding="async">' +
+        '</div>'
+    );
+}
+
 /**
  * Builds a single project case-study card.
  * @param {Object} project
@@ -1148,6 +1333,7 @@ function buildProjectCard(project, detailId) {
     return (
         '<article class="project-case-item">' +
         '<button type="button" class="project-case-card project-case-trigger" data-project-id="' + escapeHtml(detailId) + '" aria-haspopup="dialog" aria-label="Open details for ' + escapeHtml(project.title) + '">' +
+        buildProjectImage(project, 'project-case-media', 'project-case-image') +
         '<div class="project-case-top">' +
         '<div class="project-case-icon" aria-hidden="true"><i class="' + escapeHtml(project.icon || 'fas fa-folder-open') + '"></i></div>' +
         '<div class="project-case-meta">' +
@@ -1267,6 +1453,7 @@ function buildProjectDetailContent(project) {
 
     return (
         '<div class="project-detail-hero">' +
+        buildProjectImage(project, 'project-detail-media', 'project-detail-image') +
         '<div class="project-detail-header">' +
         '<div class="project-detail-icon" aria-hidden="true"><i class="' + escapeHtml(project.icon || 'fas fa-folder-open') + '"></i></div>' +
         '<div class="project-detail-header-copy">' +
