@@ -447,6 +447,28 @@ var RESUME_DATA = {
             period: 'Jun 2023 – May 2024',
             icon: 'fas fa-shield-alt',
             summary: 'Backend engineering for FinSAAS — Finhaat\'s institutional B2B insurance distribution platform — covering policy issuance APIs, claims management, partner onboarding, RBAC, and MIS reporting for 200+ institutional partners across India.',
+            images: [
+                {
+                    url: 'https://resume0775.s3.eu-north-1.amazonaws.com/finhaat_dashboard.PNG',
+                    label: 'Finhaat Dashboard'
+                },
+                 {
+                    url: 'https://resume0775.s3.eu-north-1.amazonaws.com/finhaat_disboard.PNG',
+                    label: 'Finhaat Dashboard Variant'
+                },
+                {
+                    url: 'https://resume0775.s3.eu-north-1.amazonaws.com/insurance-platform-retail-agents.PNG',
+                    label: 'Insurance Platform Retail Agents'
+                },
+                {
+                    url: 'https://resume0775.s3.eu-north-1.amazonaws.com/finhaat_claim_processPNG.PNG',
+                    label: 'Finhaat Claim Process Overview'
+                },
+                {
+                    url: 'https://resume0775.s3.eu-north-1.amazonaws.com/finhaat_claim_process.PNG',
+                    label: 'Finhaat Claim Process Detail'
+                }
+            ],
             techStack: ['Node.js', 'REST APIs', 'MySQL', 'RBAC', 'Insurance APIs', 'Document Management', 'Policy Issuance', 'Claims Workflow'],
             quickHighlights: [
                 'Built backend APIs for end-to-end digital policy issuance integrated with multiple insurer systems.',
@@ -745,12 +767,12 @@ var RESUME_DATA = {
             summary: 'Full-stack SaaS email marketing platform covering user onboarding, contact management, template creation, campaign scheduling, and reporting — built for business teams to run and track email campaigns end to end.',
             images: [
                 {
-                    url: 'https://resume0775.s3.eu-north-1.amazonaws.com/mailiam_email_compaign.png',
-                    label: 'Mailiam Email Campaign Dashboard'
+                    url: 'https://resume0775.s3.eu-north-1.amazonaws.com/mailiam_bussiness_size.png',
+                    label: 'Mailiam Business Size Selection'
                 },
                 {
-                    url: 'https://resume0775.s3.eu-north-1.amazonaws.com/mailiam_setup_temp_page.png',
-                    label: 'Mailiam Template Setup Page'
+                    url: 'https://resume0775.s3.eu-north-1.amazonaws.com/mailiam_data_mapping.png',
+                    label: 'Mailiam Data Mapping Flow'
                 },
                 {
                     url: 'https://resume0775.s3.eu-north-1.amazonaws.com/mailiam_setup_template.png',
@@ -761,17 +783,17 @@ var RESUME_DATA = {
                     label: 'Mailiam Template Preview'
                 },
                 {
+                    url: 'https://resume0775.s3.eu-north-1.amazonaws.com/mailiam_setup_temp_page.png',
+                    label: 'Mailiam Template Setup Page'
+                },
+               {
                     url: 'https://resume0775.s3.eu-north-1.amazonaws.com/mailiam_sms_tem_template.png',
                     label: 'Mailiam SMS Template Config'
                 },
                 {
-                    url: 'https://resume0775.s3.eu-north-1.amazonaws.com/mailiam_bussiness_size.png',
-                    label: 'Mailiam Business Size Selection'
+                    url: 'https://resume0775.s3.eu-north-1.amazonaws.com/mailiam_email_compaign.png',
+                    label: 'Mailiam Email Campaign Dashboard'
                 },
-                {
-                    url: 'https://resume0775.s3.eu-north-1.amazonaws.com/mailiam_data_mapping.png',
-                    label: 'Mailiam Data Mapping Flow'
-                }
             ],
             techStack: ['Node.js', 'Angular', 'MySQL', 'REST APIs', 'Multi-step Onboarding', 'RBAC', 'Email Campaigns'],
             quickHighlights: [
