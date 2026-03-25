@@ -94,6 +94,62 @@ function buildProjectPoster(config) {
     return 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(svg);
 }
 
+function normalizeProjectImageEntry(image, projectTitle, index) {
+    if (!image) {
+        return null;
+    }
+
+    if (typeof image === 'string') {
+        return {
+            url: image,
+            label: 'Project Image ' + (index + 1),
+            alt: (projectTitle || 'Project') + ' image ' + (index + 1)
+        };
+    }
+
+    if (typeof image === 'object' && image.url) {
+        return {
+            url: image.url,
+            label: image.label || ('Project Image ' + (index + 1)),
+            alt: image.alt || image.label || ((projectTitle || 'Project') + ' image ' + (index + 1))
+        };
+    }
+
+    return null;
+}
+
+function normalizeProjectImages(project, fallbackUrl) {
+    var rawImages = Array.isArray(project && project.images) ? project.images : [];
+    var normalized = rawImages
+        .map(function (image, index) {
+            return normalizeProjectImageEntry(image, project && project.title, index);
+        })
+        .filter(Boolean);
+
+    if (!normalized.length && project && project.image) {
+        normalized.push(normalizeProjectImageEntry(project.image, project.title, 0));
+    }
+
+    if (!normalized.length && fallbackUrl) {
+        normalized.push(normalizeProjectImageEntry({
+            url: fallbackUrl,
+            label: 'Project Preview',
+            alt: (project && project.title ? project.title : 'Project') + ' preview'
+        }, project && project.title, 0));
+    }
+
+    return normalized;
+}
+
+function getProjectImages(project) {
+    return project && Array.isArray(project.images) ? project.images : [];
+}
+
+function getProjectPrimaryImage(project) {
+    var images = getProjectImages(project);
+    return images.length ? images[0] : null;
+}
+
 // ── Static Resume Data ───────────────────────────────────────
 var RESUME_DATA = {
 
@@ -687,6 +743,28 @@ var RESUME_DATA = {
             period: 'Jun 2022 – May 2023',
             icon: 'fas fa-envelope-open-text',
             summary: 'Full-stack SaaS email marketing platform covering user onboarding, contact management, template creation, campaign scheduling, and reporting — built for business teams to run and track email campaigns end to end.',
+            images: [
+                {
+                    url: 'file:///C:/Users/ITPL0043/Pictures/Screenshots/Screenshot%20(37).png',
+                    label: 'Mailiam Dashboard Overview'
+                },
+                {
+                    url: 'file:///C:/Users/ITPL0043/Pictures/Screenshots/Screenshot%20(38).png',
+                    label: 'Mailiam Contacts Module'
+                },
+                {
+                    url: 'file:///C:/Users/ITPL0043/Pictures/Screenshots/Screenshot%20(39).png',
+                    label: 'Mailiam Template Builder'
+                },
+                {
+                    url: 'file:///C:/Users/ITPL0043/Pictures/Screenshots/Screenshot%20(40).png',
+                    label: 'Mailiam Campaign Flow'
+                },
+                {
+                    url: 'file:///C:/Users/ITPL0043/Pictures/Screenshots/Screenshot%20(42).png',
+                    label: 'Mailiam Campaign Reporting'
+                }
+            ],
             techStack: ['Node.js', 'Angular', 'MySQL', 'REST APIs', 'Multi-step Onboarding', 'RBAC', 'Email Campaigns'],
             quickHighlights: [
                 'Delivered complete multi-step user registration and onboarding flow with email and OTP verification.',
@@ -897,15 +975,16 @@ var PROJECT_IMAGE_MAP = {
 };
 
 safeArray(RESUME_DATA.projects).forEach(function (project) {
-    if (!project.image) {
-        project.image = PROJECT_IMAGE_MAP[project.title] || buildProjectPoster({
-            title: project.title,
-            subtitle: project.domain,
-            accentA: '#f7d243',
-            accentB: '#0c831f',
-            accentC: '#244b28'
-        });
-    }
+    var fallbackImage = PROJECT_IMAGE_MAP[project.title] || buildProjectPoster({
+        title: project.title,
+        subtitle: project.domain,
+        accentA: '#f7d243',
+        accentB: '#0c831f',
+        accentC: '#244b28'
+    });
+
+    project.images = normalizeProjectImages(project, fallbackImage);
+    project.image = project.images.length ? project.images[0].url : '';
 });
 
 // ── State ────────────────────────────────────────────────────
@@ -913,6 +992,7 @@ var progressBars = [];
 var timelineDetailsStore = {};
 var projectDetailsStore = {};
 var projectDetailLastTrigger = null;
+var projectImagePreviewLastTrigger = null;
 var certificatePreviewStore = {};
 var certificatePreviewLastTrigger = null;
 var appreciationPreviewStore = {};
@@ -1312,13 +1392,56 @@ function buildProjectOverviewPanel(items) {
 }
 
 function buildProjectImage(project, wrapperClass, imageClass) {
-    if (!project || !project.image) {
+    var primaryImage = getProjectPrimaryImage(project);
+
+    if (!primaryImage || !primaryImage.url) {
         return '';
     }
 
     return (
         '<div class="' + escapeHtml(wrapperClass) + '">' +
-        '<img class="' + escapeHtml(imageClass) + '" src="' + escapeHtml(project.image) + '" alt="' + escapeHtml((project.title || 'Project') + ' preview') + '" loading="lazy" decoding="async">' +
+        '<img class="' + escapeHtml(imageClass) + '" src="' + escapeHtml(primaryImage.url) + '" alt="' + escapeHtml(primaryImage.alt || ((project.title || 'Project') + ' preview')) + '" loading="lazy" decoding="async">' +
+        '</div>'
+    );
+}
+
+function buildProjectGallery(project) {
+    var images = getProjectImages(project);
+
+    if (!images.length) {
+        return '';
+    }
+
+    return (
+        '<section class="project-gallery-section">' +
+        '<div class="project-gallery-head">' +
+        '<p class="project-gallery-kicker">Project Work Showcase</p>' +
+        '<span class="project-gallery-count">' + escapeHtml(String(images.length)) + ' Image' + (images.length > 1 ? 's' : '') + '</span>' +
+        '</div>' +
+        '<div class="project-gallery-grid">' +
+        images.map(function (image, index) {
+            return (
+                '<figure class="project-gallery-card">' +
+                '<img class="project-gallery-image" src="' + escapeHtml(image.url) + '" alt="' + escapeHtml(image.alt || image.label || ('Project image ' + (index + 1))) + '" loading="lazy" decoding="async" data-project-image-preview="' + escapeHtml(image.url) + '" data-project-image-label="' + escapeHtml(image.label || ('Project Image ' + (index + 1))) + '">' +
+                '<figcaption class="project-gallery-caption">' +
+                '<span class="project-gallery-caption-text">' + escapeHtml(image.label || ('Project Image ' + (index + 1))) + '</span>' +
+                '<a class="project-gallery-link" href="' + escapeHtml(image.url) + '" target="_blank" rel="noreferrer noopener" data-project-image-preview="' + escapeHtml(image.url) + '" data-project-image-label="' + escapeHtml(image.label || ('Project Image ' + (index + 1))) + '">Open Image</a>' +
+                '</figcaption>' +
+                '</figure>'
+            );
+        }).join('') +
+        '</div>' +
+        '</section>'
+    );
+}
+
+function buildProjectDetailTabs(project) {
+    var hasImages = getProjectImages(project).length > 0;
+
+    return (
+        '<div class="project-detail-tabs" role="tablist" aria-label="Project detail sections">' +
+        '<button type="button" class="project-detail-tab is-active" role="tab" aria-selected="true" data-project-tab="details">Details</button>' +
+        '<button type="button" class="project-detail-tab" role="tab" aria-selected="false" data-project-tab="images">Images</button>' +
         '</div>'
     );
 }
@@ -1400,6 +1523,7 @@ function buildProjectLinkButtons(items) {
 }
 
 function buildProjectDetailContent(project) {
+    var hasImages = getProjectImages(project).length > 0;
     var infoCards = [
         { label: 'Company', value: project.company || '' },
         { label: 'Timeline', value: project.period || '' },
@@ -1413,24 +1537,19 @@ function buildProjectDetailContent(project) {
         );
     }).join('');
 
-    var overviewContent =
-        '<p class="project-detail-text">' + escapeHtml(project.businessOverview || '') + '</p>' +
-        '<p class="project-detail-text project-detail-text-muted">' + escapeHtml(project.problemStatement || '') + '</p>';
-
-    var roleContent =
-        '<p class="project-detail-role"><span>Role</span>' + escapeHtml(project.role || '') + '</p>' +
-        buildProjectDetailList(project.responsibilities);
-
     var technologiesContent = '<div class="project-detail-tech-grid">' + buildProjectTechBadges(project.technologiesUsed || project.techStack) + '</div>';
 
     var detailCards = [
-        buildProjectInsightItem('Project Context', 'fas fa-briefcase', overviewContent, 'project-insight-item-wide'),
-        buildProjectInsightItem('Role and Responsibilities', 'fas fa-user-gear', roleContent),
-        buildProjectInsightItem('Technologies Used', 'fas fa-code', technologiesContent),
+        buildProjectInsightItem('Quick Highlights', 'fas fa-bolt', buildProjectDetailList(project.quickHighlights)),
+        buildProjectInsightItem('Business Overview', 'fas fa-briefcase', '<p class="project-detail-text">' + escapeHtml(project.businessOverview || '') + '</p>', 'project-insight-item-wide'),
+        buildProjectInsightItem('Problem Statement', 'fas fa-circle-question', '<p class="project-detail-text project-detail-text-muted">' + escapeHtml(project.problemStatement || '') + '</p>', 'project-insight-item-wide'),
+        buildProjectInsightItem('Role', 'fas fa-user-tie', '<p class="project-detail-text">' + escapeHtml(project.role || 'Not specified') + '</p>'),
+        buildProjectInsightItem('Responsibilities', 'fas fa-user-gear', buildProjectDetailList(project.responsibilities)),
         buildProjectInsightItem('Features Implemented', 'fas fa-layer-group', buildProjectDetailList(project.featuresImplemented)),
-        buildProjectInsightItem('Business Impact', 'fas fa-chart-column', buildProjectDetailList(project.businessImpact)),
+        buildProjectInsightItem('Technologies Used', 'fas fa-code', technologiesContent),
         buildProjectInsightItem('Challenges Faced', 'fas fa-triangle-exclamation', buildProjectDetailList(project.challengesFaced)),
-        buildProjectInsightItem('Solutions Delivered', 'fas fa-wand-magic-sparkles', buildProjectDetailList(project.solutionsDelivered))
+        buildProjectInsightItem('Solutions Delivered', 'fas fa-wand-magic-sparkles', buildProjectDetailList(project.solutionsDelivered)),
+        buildProjectInsightItem('Business Impact', 'fas fa-chart-column', buildProjectDetailList(project.businessImpact))
     ];
 
     if (safeArray(project.moduleBreakdown).length) {
@@ -1453,7 +1572,6 @@ function buildProjectDetailContent(project) {
 
     return (
         '<div class="project-detail-hero">' +
-        buildProjectImage(project, 'project-detail-media', 'project-detail-image') +
         '<div class="project-detail-header">' +
         '<div class="project-detail-icon" aria-hidden="true"><i class="' + escapeHtml(project.icon || 'fas fa-folder-open') + '"></i></div>' +
         '<div class="project-detail-header-copy">' +
@@ -1466,10 +1584,16 @@ function buildProjectDetailContent(project) {
         '<p class="project-detail-summary">' + escapeHtml(project.summary || '') + '</p>' +
         '</div>' +
         '</div>' +
+        buildProjectDetailTabs(project) +
+        '<section class="project-detail-tab-panel" role="tabpanel" data-project-panel="images">' +
+        buildProjectGallery(project) +
+        '</section>' +
+        '<section class="project-detail-tab-panel is-active" role="tabpanel" data-project-panel="details">' +
         '<div class="project-detail-meta-panel">' + infoCards + '</div>' +
         '<div class="project-detail-top-tech">' + buildProjectTechBadges(project.techStack) + '</div>' +
-        '</div>' +
-        '<div class="project-insight-grid">' + detailCards.join('') + '</div>'
+        '<div class="project-insight-grid">' + detailCards.join('') + '</div>' +
+        '</section>' +
+        '</div>'
     );
 }
 
@@ -2141,6 +2265,30 @@ function ensureProjectDetailModal() {
     return modal;
 }
 
+function ensureProjectImagePreviewModal() {
+    var modal = document.getElementById('project-image-preview-modal');
+    if (modal) return modal;
+
+    modal = document.createElement('div');
+    modal.id = 'project-image-preview-modal';
+    modal.className = 'project-image-preview-modal';
+    modal.setAttribute('aria-hidden', 'true');
+    modal.innerHTML = '' +
+        '<div class="project-image-preview-backdrop" data-project-image-close="true"></div>' +
+        '<div class="project-image-preview-dialog" role="dialog" aria-modal="true" aria-labelledby="project-image-preview-title">' +
+        '<button type="button" class="project-image-preview-close" aria-label="Close image preview" data-project-image-close="true">' +
+        '<i class="fas fa-xmark" aria-hidden="true"></i>' +
+        '</button>' +
+        '<figure class="project-image-preview-figure">' +
+        '<img id="project-image-preview-img" class="project-image-preview-img" alt="">' +
+        '<figcaption id="project-image-preview-title" class="project-image-preview-caption"></figcaption>' +
+        '</figure>' +
+        '</div>';
+
+    document.body.appendChild(modal);
+    return modal;
+}
+
 function openProjectDetail(detailId, trigger) {
     var modal = ensureProjectDetailModal();
     var content = document.getElementById('project-detail-content');
@@ -2174,6 +2322,67 @@ function closeProjectDetail() {
     }
 }
 
+function openProjectImagePreview(imageUrl, label, trigger) {
+    var modal = ensureProjectImagePreviewModal();
+    var image = document.getElementById('project-image-preview-img');
+    var caption = document.getElementById('project-image-preview-title');
+
+    if (!modal || !image || !imageUrl) return;
+
+    projectImagePreviewLastTrigger = trigger || null;
+    image.src = imageUrl;
+    image.alt = label || 'Project image preview';
+    if (caption) caption.textContent = label || 'Project image preview';
+
+    modal.classList.add('is-open');
+    modal.setAttribute('aria-hidden', 'false');
+
+    var closeButton = modal.querySelector('.project-image-preview-close');
+    if (closeButton) closeButton.focus();
+}
+
+function closeProjectImagePreview() {
+    var modal = document.getElementById('project-image-preview-modal');
+    var image = document.getElementById('project-image-preview-img');
+    var caption = document.getElementById('project-image-preview-title');
+
+    if (!modal) return;
+
+    modal.classList.remove('is-open');
+    modal.setAttribute('aria-hidden', 'true');
+
+    if (image) {
+        image.removeAttribute('src');
+        image.alt = '';
+    }
+
+    if (caption) caption.textContent = '';
+
+    if (projectImagePreviewLastTrigger) {
+        projectImagePreviewLastTrigger.focus();
+        projectImagePreviewLastTrigger = null;
+    }
+}
+
+function trapProjectImagePreviewFocus(event) {
+    var modal = document.getElementById('project-image-preview-modal');
+    if (!modal || !modal.classList.contains('is-open') || event.key !== 'Tab') return;
+
+    var focusable = modal.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+    if (!focusable.length) return;
+
+    var first = focusable[0];
+    var last = focusable[focusable.length - 1];
+
+    if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+    } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+    }
+}
+
 function trapProjectDetailFocus(event) {
     var modal = document.getElementById('project-detail-modal');
     if (!modal || !modal.classList.contains('is-open') || event.key !== 'Tab') return;
@@ -2195,6 +2404,7 @@ function trapProjectDetailFocus(event) {
 
 function setupProjectDetailDialog() {
     ensureProjectDetailModal();
+    ensureProjectImagePreviewModal();
 
     document.addEventListener('click', function (event) {
         var trigger = event.target.closest('.project-case-trigger');
@@ -2203,15 +2413,58 @@ function setupProjectDetailDialog() {
             return;
         }
 
+        var imagePreviewTrigger = event.target.closest('[data-project-image-preview]');
+        if (imagePreviewTrigger) {
+            event.preventDefault();
+            openProjectImagePreview(
+                imagePreviewTrigger.getAttribute('data-project-image-preview'),
+                imagePreviewTrigger.getAttribute('data-project-image-label'),
+                imagePreviewTrigger
+            );
+            return;
+        }
+
         if (event.target.closest('[data-project-detail-close="true"]')) {
             closeProjectDetail();
+            return;
+        }
+
+        if (event.target.closest('[data-project-image-close="true"]')) {
+            closeProjectImagePreview();
+            return;
+        }
+
+        var tabButton = event.target.closest('[data-project-tab]');
+        if (tabButton) {
+            var modal = document.getElementById('project-detail-modal');
+            if (!modal) return;
+
+            var tabName = tabButton.getAttribute('data-project-tab');
+            var tabs = modal.querySelectorAll('[data-project-tab]');
+            var panels = modal.querySelectorAll('[data-project-panel]');
+
+            tabs.forEach(function (tab) {
+                var isActive = tab.getAttribute('data-project-tab') === tabName;
+                tab.classList.toggle('is-active', isActive);
+                tab.setAttribute('aria-selected', isActive ? 'true' : 'false');
+            });
+
+            panels.forEach(function (panel) {
+                panel.classList.toggle('is-active', panel.getAttribute('data-project-panel') === tabName);
+            });
         }
     });
 
     document.addEventListener('keydown', function (event) {
         trapProjectDetailFocus(event);
+        trapProjectImagePreviewFocus(event);
 
         if (event.key === 'Escape') {
+            var imagePreviewModal = document.getElementById('project-image-preview-modal');
+            if (imagePreviewModal && imagePreviewModal.classList.contains('is-open')) {
+                closeProjectImagePreview();
+                return;
+            }
             closeProjectDetail();
         }
     });
