@@ -584,6 +584,78 @@ var RESUME_DATA = {
                 'Modules aligned with campaign workflow needs.',
                 'Experimentation support integrated with product delivery.'
             ]
+        },
+        {
+            title: 'Mailiam – Email Marketing SaaS Platform',
+            domain: 'Email Marketing / SaaS',
+            company: 'PrimaFelicitas',
+            period: 'Jun 2022 – May 2023',
+            icon: 'fas fa-envelope-open-text',
+            summary: 'Full-stack SaaS email marketing platform covering user onboarding, contact management, template creation, campaign scheduling, and reporting — built for business teams to run and track email campaigns end to end.',
+            techStack: ['Node.js', 'Angular', 'MySQL', 'REST APIs', 'Multi-step Onboarding', 'RBAC', 'Email Campaigns'],
+            quickHighlights: [
+                'Delivered complete multi-step user registration and onboarding flow with email and OTP verification.',
+                'Built contacts module with manual add, CSV/XLSX bulk import, field mapping, and list management.',
+                'Implemented template system with layout gallery, HTML editor, and rich text editor support.',
+                'Engineered campaign workflow covering From/To/Subject/Design configuration, preview, test, and scheduling.'
+            ],
+            businessOverview: 'Mailiam is a business email marketing SaaS platform that gives companies the tools to grow their audience, design email campaigns, and measure delivery outcomes — all within a single, managed product experience.',
+            problemStatement: 'Business teams needed a reliable self-service platform to manage contacts at scale, build professional email templates without technical effort, and run campaigns with scheduling and reporting support baked in.',
+            role: 'Software Engineer (Backend + Frontend Integration)',
+            responsibilities: [
+                'Developed backend APIs and database logic for user registration, onboarding, and authentication flows.',
+                'Built the full contacts and mailing list module including bulk import pipelines with field mapping.',
+                'Implemented template creation flows integrating layout selection, HTML editor, and template gallery.',
+                'Engineered the email campaign module covering sender configuration, recipient list selection, scheduling, and test email dispatch.',
+                'Integrated frontend Angular components with backend APIs across all major feature modules.'
+            ],
+            featuresImplemented: [
+                'Multi-step onboarding: register, email verification, basic info, company info, business details, phone OTP.',
+                'Login, forgot password, reset password with expiry-aware link handling.',
+                'Contacts module: add manually, import via CSV/XLSX/TXT, copy-paste, drag-and-drop file upload.',
+                'Import pipeline with file preview, column mapping, list selection or creation.',
+                'Mailing lists with folder-based organisation, subscriber manager, duplicate, rename, and delete.',
+                'Template system with Layouts, Template Gallery, My Templates, and Code Your Own (HTML + rich text editor).',
+                'Template setup: name, subject line, preview text, from email/name, personalisation support.',
+                'Campaign builder: From, To (contact list), Subject, Design selection, Preview & Test, Schedule (send now / schedule for later / best time).',
+                'Dashboard with total contacts, opens, clicks, and blocklist stats.',
+                'Settings: My Profile, password change, Senders & IPs management, timezone and notification preferences.'
+            ],
+            technologiesUsed: ['Node.js', 'Express', 'Angular', 'MySQL', 'REST APIs', 'RBAC', 'Email Verification', 'OTP Flow', 'File Upload', 'Cron Jobs'],
+            challengesFaced: [
+                'Designing a multi-step onboarding flow that stayed reliable across email and OTP verification stages.',
+                'Handling bulk contact imports with flexible field mapping without degrading performance.',
+                'Managing template creation across multiple editor modes (drag-and-drop, HTML, gallery) in a consistent way.',
+                'Building a campaign workflow that coordinated multiple configuration steps before scheduling and dispatch.'
+            ],
+            solutionsDelivered: [
+                'Built a step-based onboarding architecture with verification state tracking and clear fallback handling.',
+                'Created an import pipeline that parsed CSV/XLSX inputs, previewed data, mapped columns, and committed to lists atomically.',
+                'Implemented a tabbed template design system separating layout selection, gallery templates, saved templates, and raw HTML entry.',
+                'Engineered the campaign module as a sequenced configuration flow with validation gates before scheduling was available.'
+            ],
+            businessImpact: [
+                'Delivered a working SaaS platform that covered the full email marketing lifecycle from onboarding to reporting.',
+                'Enabled business users to import and manage thousands of contacts without technical support.',
+                'Reduced time-to-campaign by providing structured template creation and guided campaign setup.',
+                'Built a scalable foundation that supported Phase 2 expansion including plugins, subscription plans, and WordPress sync.'
+            ],
+            moduleBreakdown: [
+                'User registration and multi-step onboarding',
+                'Email and OTP verification flows',
+                'Contacts and mailing list management',
+                'Bulk import with field mapping pipeline',
+                'Email template creation and editor system',
+                'Campaign builder and scheduler',
+                'Dashboard and campaign statistics',
+                'Senders, settings, and profile management'
+            ],
+            architecturePoints: [
+                'Backend structured around feature-specific API modules with user-scoped data isolation.',
+                'Onboarding implemented as a stateful multi-step flow with verification checkpoints at each stage.',
+                'Import pipeline designed to handle file parsing, preview, mapping, and list persistence in a single transaction-safe flow.',
+                'Template and campaign modules built with a step-based UI architecture supported by corresponding backend validation.'
+            ]
         }
     ],
 
